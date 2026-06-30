@@ -1,3 +1,34 @@
+export type ThreeTKey = "timing" | "territory" | "talent";
+
+export type ResearchLensId =
+  | "people_intel"
+  | "review_sites"
+  | "team_linkedin"
+  | "media_competition"
+  | "industry_growth";
+
+export type ResearchSentiment = "positive" | "neutral" | "red_flag";
+
+export interface ResearchFinding {
+  text: string;
+  sentiment: ResearchSentiment;
+  confidence: "high" | "medium" | "emerging";
+  feedsThreeT: ThreeTKey[];
+}
+
+export interface ResearchLensData {
+  score: number;
+  headline: string;
+  findings: ResearchFinding[];
+  checklist: string[];
+  resources?: { label: string; url: string }[];
+}
+
+export interface CompanyResearch {
+  lenses: Record<ResearchLensId, ResearchLensData>;
+  diligenceScore: number;
+}
+
 export type SignalSource =
   | "linkedin"
   | "hiring"

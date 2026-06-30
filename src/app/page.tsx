@@ -168,6 +168,66 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Research playbook methodology */}
+      <section className="border-b py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight">
+              The 5-step research playbook
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              How great reps diligence a company before they join — built into
+              every profile. Your workflow, systematized.
+            </p>
+          </div>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {[
+              {
+                step: "1",
+                title: "Coffee chats",
+                desc: "Current & former employees — quota reality, ramp, culture",
+              },
+              {
+                step: "2",
+                title: "RepVue & Glassdoor",
+                desc: "Quota attainment, OTE accuracy, leadership patterns",
+              },
+              {
+                step: "3",
+                title: "Team LinkedIn",
+                desc: "Pedigrees, tenure, red flags, where alumni go next",
+              },
+              {
+                step: "4",
+                title: "Media & competition",
+                desc: "Funding, press, who they beat (and lose to) in deals",
+              },
+              {
+                step: "5",
+                title: "Industry growth",
+                desc: "Category tailwinds, budget trends, market CAGR",
+              },
+            ].map((item) => (
+              <Card key={item.step}>
+                <CardContent className="pt-6">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                    {item.step}
+                  </div>
+                  <h3 className="mt-3 font-semibold">{item.title}</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {item.desc}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <p className="mx-auto mt-8 max-w-xl text-center text-sm text-muted-foreground">
+            Each lens feeds the Three T&apos;s. Coffee chat intel shapes Talent.
+            LinkedIn sweeps shape Territory. Industry data shapes Timing.
+          </p>
+        </div>
+      </section>
+
       {/* Problem / Solution */}
       <section className="border-b py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

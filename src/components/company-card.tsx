@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { GravyTrainBadgeCompact } from "@/components/gravy-train-badge";
 import { ThreeTsOverview } from "@/components/three-ts-overview";
+import { ResearchPlaybookSummary } from "@/components/research-playbook";
+import { getResearchForCompany } from "@/lib/data";
 import {
   DollarSign,
   TrendingUp,
@@ -13,6 +15,8 @@ import {
 import { Company } from "@/lib/types";
 
 export function CompanyCard({ company }: { company: Company }) {
+  const research = getResearchForCompany(company);
+
   return (
     <Link href={`/companies/${company.slug}`}>
       <Card className="group h-full transition-all hover:border-primary/20 hover:shadow-lg">
@@ -43,6 +47,10 @@ export function CompanyCard({ company }: { company: Company }) {
 
           <div className="mt-3">
             <GravyTrainBadgeCompact verdict={company.gravyTrainVerdict} />
+          </div>
+
+          <div className="mt-3">
+            <ResearchPlaybookSummary research={research} />
           </div>
 
           <div className="mt-4 border-t pt-4">

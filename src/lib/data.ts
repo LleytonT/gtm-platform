@@ -1,5 +1,7 @@
-import { Company, Scenario } from "./types";
+import { Company, CompanyResearch, Scenario } from "./types";
 import { computeGravyTrainScore, getGravyTrainVerdict } from "./three-ts";
+import { buildResearchFromCompany } from "./research-playbook";
+import { getEnrichedResearch } from "./research-data";
 
 function withGravyTrain(
   company: Omit<Company, "gravyTrainScore" | "gravyTrainVerdict">
@@ -1186,6 +1188,10 @@ export function getCompanyBySlug(slug: string): Company | undefined {
 
 export function getScenariosByCompany(companySlug: string): Scenario[] {
   return scenarios.filter((s) => s.company === companySlug);
+}
+
+export function getResearchForCompany(company: Company): CompanyResearch {
+  return getEnrichedResearch(company.slug) ?? buildResearchFromCompany(company);
 }
 
 export function getScoreColor(score: number): string {

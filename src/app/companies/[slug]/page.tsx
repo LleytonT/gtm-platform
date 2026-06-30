@@ -12,12 +12,14 @@ import { QualitativeSignals } from "@/components/qualitative-signals";
 import {
   companies,
   getCompanyBySlug,
+  getResearchForCompany,
   getScenariosByCompany,
   getScoreColor,
   getScoreBg,
   getScoreLabel,
 } from "@/lib/data";
 import { THREE_T_META, THREE_T_ORDER } from "@/lib/three-ts";
+import { ResearchPlaybook } from "@/components/research-playbook";
 import {
   ArrowLeft,
   TrendingUp,
@@ -61,6 +63,7 @@ export default async function CompanyDetailPage(
   }
 
   const scenarios = getScenariosByCompany(slug);
+  const research = getResearchForCompany(company);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -188,6 +191,11 @@ export default async function CompanyDetailPage(
           })}
         </div>
       </section>
+
+      {/* Research Playbook — the 5-step diligence workflow */}
+      <div className="mb-12">
+        <ResearchPlaybook research={research} companyName={company.name} />
+      </div>
 
       {/* Supporting context */}
       <div className="mb-6">
