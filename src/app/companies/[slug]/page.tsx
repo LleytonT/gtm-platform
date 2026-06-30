@@ -1,6 +1,24 @@
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import {
+  ArrowLeft,
+  TrendingUp,
+  DollarSign,
+  Target,
+  Users,
+  MapPin,
+  Calendar,
+  Globe,
+  Building2,
+  Briefcase,
+  Mail,
+  Phone,
+  ExternalLink,
+  Train,
+  Clock,
+  Map,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +38,7 @@ import {
   getScoreLabel,
 } from "@/lib/data";
 import { THREE_T_META, THREE_T_ORDER } from "@/lib/three-ts";
+import { cn } from "@/lib/utils";
 
 const ResearchPlaybook = dynamic(
   () =>
@@ -34,25 +53,6 @@ const ResearchPlaybook = dynamic(
     ),
   }
 );
-import {
-  ArrowLeft,
-  TrendingUp,
-  DollarSign,
-  Target,
-  Users,
-  MapPin,
-  Calendar,
-  Globe,
-  Building2,
-  Briefcase,
-  Mail,
-  Phone,
-  ExternalLink,
-  Train,
-  Clock,
-  Map,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 
 const DIMENSION_ICONS = {
   timing: Clock,

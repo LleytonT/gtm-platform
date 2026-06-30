@@ -123,6 +123,23 @@
   h3,
   .font-display {
     font-family: var(--font-display), Georgia, serif;
+    text-wrap: balance;
+  }
+
+  h1,
+  h2,
+  h3,
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  a,
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
   }
 
   .font-mono-data {
@@ -180,5 +197,9 @@
     .reveal-up-delay-3 {
       animation: none;
     }
+  }
+
+  .focus-ring {
+    @apply outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50;
   }
 }

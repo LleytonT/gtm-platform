@@ -24,12 +24,12 @@ export function CompanyCard({
     <Link href={`/companies/${company.slug}`} className="group block h-full">
       <Card className="h-full border border-rule bg-card shadow-none transition-colors hover:border-brief/30 hover:bg-card/90">
         <CardContent className="pt-6">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-start justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center border border-rule bg-background font-display text-lg font-semibold text-brief">
                 {company.name.charAt(0)}
               </div>
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-display font-semibold group-hover:text-brief">
                   {company.name}
                 </h3>

@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -38,11 +40,71 @@ export default function CompaniesClient({
   industries: string[];
   regions: string[];
 }) {
-  const [search, setSearch] = useState("");
-  const [industryFilter, setIndustryFilter] = useState("all");
-  const [regionFilter, setRegionFilter] = useState("all");
-  const [gravyTrainOnly, setGravyTrainOnly] = useState(false);
-  const [sortBy, setSortBy] = useState<SortOption>("gravyTrain");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
+  const [industryFilter, setIndustryFilter] = useState(
+    () => searchParams.get("industry") ?? "all"
+  );
+  const [regionFilter, setRegionFilter] = useState(
+    () => searchParams.get("region") ?? "all"
+  );
+  const [gravyTrainOnly, setGravyTrainOnly] = useState(
+    () => searchParams.get("gravy") === "1"
+  );
+  const [sortBy, setSortBy] = useState<SortOption>(
+    () => (searchParams.get("sort") as SortOption) ?? "gravyTrain"
+  );
+
+  const syncUrl = useCallback(
+    (updates: {
+      q?: string;
+      industry?: string;
+      region?: string;
+      gravy?: boolean;
+      sort?: string;
+    }) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if ("q" in updates) {
+        const q = updates.q?.trim();
+        if (q) params.set("q", q);
+        else params.delete("q");
+      }
+      if ("industry" in updates) {
+        if (updates.industry && updates.industry !== "all")
+          params.set("industry", updates.industry);
+        else params.delete("industry");
+      }
+      if ("region" in updates) {
+        if (updates.region && updates.region !== "all")
+          params.set("region", updates.region);
+        else params.delete("region");
+      }
+      if ("gravy" in updates) {
+        if (updates.gravy) params.set("gravy", "1");
+        else params.delete("gravy");
+      }
+      if ("sort" in updates) {
+        if (updates.sort && updates.sort !== "gravyTrain")
+          params.set("sort", updates.sort);
+        else params.delete("sort");
+      }
+
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [router, pathname, searchParams]
+  );
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      syncUrl({ q: search });
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [search, syncUrl]);
 
   const filtered = useMemo(() => {
     let result = [...items];
@@ -69,9 +131,7 @@ export default function CompaniesClient({
     }
 
     if (gravyTrainOnly) {
-      result = result.filter(
-        ({ company: c }) => c.gravyTrainScore >= 90
-      );
+      result = result.filter(({ company: c }) => c.gravyTrainScore >= 90);
     }
 
     result.sort((a, b) => {
@@ -100,6 +160,10 @@ export default function CompaniesClient({
   const hasFilters =
     search || industryFilter !== "all" || regionFilter !== "all" || gravyTrainOnly;
 
+  const resultsMessage = hasFilters
+    ? `${filtered.length} companies match your filters`
+    : `${filtered.length} companies`;
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <SectionHeader
@@ -111,25 +175,40 @@ export default function CompaniesClient({
       />
 
       <div className="mb-8 flex flex-col gap-4 border border-rule bg-card p-4 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
+        <div className="relative min-w-0 flex-1">
+          <Label htmlFor="company-search" className="sr-only">
+            Search companies
+          </Label>
           <Search
-            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
             aria-hidden
           />
           <Input
-            placeholder="Search companies..."
+            id="company-search"
+            name="company-search"
+            type="search"
+            autoComplete="off"
+            spellCheck={false}
+            placeholder="Search companies…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border-rule bg-background pl-9"
-            aria-label="Search companies"
           />
         </div>
         <div className="flex flex-wrap gap-3">
           <Select
             value={industryFilter}
-            onValueChange={(v) => setIndustryFilter(v ?? "all")}
+            onValueChange={(v) => {
+              const next = v ?? "all";
+              setIndustryFilter(next);
+              syncUrl({ industry: next });
+            }}
           >
-            <SelectTrigger className="w-[180px] border-rule bg-background">
+            <SelectTrigger
+              id="industry-filter"
+              className="w-[180px] border-rule bg-background"
+              aria-label="Filter by industry"
+            >
               <SlidersHorizontal className="mr-2 h-3 w-3" aria-hidden />
               <SelectValue placeholder="Industry" />
             </SelectTrigger>
@@ -144,9 +223,17 @@ export default function CompaniesClient({
           </Select>
           <Select
             value={regionFilter}
-            onValueChange={(v) => setRegionFilter(v ?? "all")}
+            onValueChange={(v) => {
+              const next = v ?? "all";
+              setRegionFilter(next);
+              syncUrl({ region: next });
+            }}
           >
-            <SelectTrigger className="w-[160px] border-rule bg-background">
+            <SelectTrigger
+              id="region-filter"
+              className="w-[160px] border-rule bg-background"
+              aria-label="Filter by region"
+            >
               <SelectValue placeholder="Region" />
             </SelectTrigger>
             <SelectContent>
@@ -160,9 +247,17 @@ export default function CompaniesClient({
           </Select>
           <Select
             value={sortBy}
-            onValueChange={(v) => v && setSortBy(v as SortOption)}
+            onValueChange={(v) => {
+              if (!v) return;
+              setSortBy(v as SortOption);
+              syncUrl({ sort: v });
+            }}
           >
-            <SelectTrigger className="w-[180px] border-rule bg-background">
+            <SelectTrigger
+              id="sort-by"
+              className="w-[180px] border-rule bg-background"
+              aria-label="Sort companies"
+            >
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -179,9 +274,13 @@ export default function CompaniesClient({
           </Select>
           <button
             type="button"
-            onClick={() => setGravyTrainOnly(!gravyTrainOnly)}
+            onClick={() => {
+              const next = !gravyTrainOnly;
+              setGravyTrainOnly(next);
+              syncUrl({ gravy: next });
+            }}
             aria-pressed={gravyTrainOnly}
-            className={`inline-flex h-9 items-center gap-2 border px-3 text-sm font-medium transition-colors ${
+            className={`focus-ring inline-flex h-9 items-center gap-2 border px-3 text-sm font-medium transition-colors ${
               gravyTrainOnly
                 ? "border-gravy bg-gravy/15 text-brief"
                 : "border-rule bg-background text-muted-foreground hover:bg-accent"
@@ -194,8 +293,10 @@ export default function CompaniesClient({
       </div>
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary">{filtered.length} companies</Badge>
+        <div className="flex min-w-0 items-center gap-2">
+          <Badge variant="secondary" aria-live="polite" aria-atomic="true">
+            {resultsMessage}
+          </Badge>
           {hasFilters && (
             <button
               type="button"
@@ -204,8 +305,10 @@ export default function CompaniesClient({
                 setIndustryFilter("all");
                 setRegionFilter("all");
                 setGravyTrainOnly(false);
+                setSortBy("gravyTrain");
+                router.replace(pathname, { scroll: false });
               }}
-              className="text-xs text-muted-foreground underline hover:text-foreground"
+              className="focus-ring text-xs text-muted-foreground underline hover:text-foreground"
             >
               Clear filters
             </button>
@@ -225,7 +328,10 @@ export default function CompaniesClient({
           ))}
         </div>
       ) : (
-        <div className="border border-dashed border-rule bg-card py-16 text-center">
+        <div
+          className="border border-dashed border-rule bg-card py-16 text-center"
+          role="status"
+        >
           <p className="text-lg font-medium">No companies match</p>
           <p className="mt-1 text-sm text-muted-foreground">
             Try different filters or clear your search.

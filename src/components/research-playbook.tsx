@@ -86,24 +86,27 @@ function LensPanel({
   const [open, setOpen] = useState(defaultOpen ?? false);
   const meta = RESEARCH_LENS_META[lensId];
   const Icon = LENS_ICONS[meta.icon];
+  const panelId = `lens-panel-${lensId}`;
 
   return (
     <Card>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full text-left"
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="focus-ring w-full text-left"
       >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex items-start gap-3">
+            <div className="flex min-w-0 items-start gap-3">
               <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                <Icon className="h-5 w-5 text-primary" />
+                <Icon className="h-5 w-5 text-primary" aria-hidden />
                 <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">
                   {meta.order}
                 </span>
               </div>
-              <div>
+              <div className="min-w-0">
                 <CardTitle className="text-base">{meta.label}</CardTitle>
                 <p className="mt-0.5 text-sm font-medium text-foreground">
                   {lens.headline}
@@ -116,16 +119,16 @@ function LensPanel({
             <div className="flex shrink-0 items-center gap-2">
               <span
                 className={cn(
-                  "text-lg font-bold",
+                  "font-mono-data text-lg font-bold tabular-nums",
                   getLensScoreColor(lens.score)
                 )}
               >
                 {lens.score}
               </span>
               {open ? (
-                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                <ChevronUp className="h-4 w-4 text-muted-foreground" aria-hidden />
               ) : (
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                <ChevronDown className="h-4 w-4 text-muted-foreground" aria-hidden />
               )}
             </div>
           </div>
@@ -133,7 +136,7 @@ function LensPanel({
       </button>
 
       {open && (
-        <CardContent className="space-y-4 border-t pt-4">
+        <CardContent id={panelId} className="space-y-4 border-t pt-4">
           {lens.findings.length > 0 ? (
             <div className="space-y-2">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -151,7 +154,7 @@ function LensPanel({
 
           <div>
             <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              <ClipboardList className="h-3.5 w-3.5" />
+              <ClipboardList className="h-3.5 w-3.5" aria-hidden />
               Your checklist
             </p>
             <ul className="space-y-1.5">
@@ -181,6 +184,7 @@ function LensPanel({
                       href={r.url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`${r.label} (opens in new tab)`}
                     />
                   }
                 >
@@ -221,7 +225,7 @@ export function ResearchPlaybook({
           <p className="text-xs text-muted-foreground">Diligence score</p>
           <p
             className={cn(
-              "text-2xl font-bold",
+              "font-mono-data text-2xl font-bold tabular-nums",
               getLensScoreColor(research.diligenceScore)
             )}
           >
@@ -240,7 +244,7 @@ export function ResearchPlaybook({
               key={id}
               className="rounded-lg border bg-card p-3 text-center"
             >
-              <Icon className="mx-auto h-4 w-4 text-primary" />
+              <Icon className="mx-auto h-4 w-4 text-primary" aria-hidden />
               <p className="mt-1 text-[10px] font-medium text-muted-foreground">
                 {meta.shortLabel}
               </p>

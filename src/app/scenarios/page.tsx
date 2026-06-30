@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useMemo, useCallback, Suspense } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -207,10 +207,34 @@ export default function ScenariosPage() {
 
 function ScenariosContent() {
   const searchParams = useSearchParams();
-  const preselectedCompany = searchParams.get("company") || "all";
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const [companyFilter, setCompanyFilter] = useState(preselectedCompany);
-  const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const [companyFilter, setCompanyFilter] = useState(
+    () => searchParams.get("company") ?? "all"
+  );
+  const [difficultyFilter, setDifficultyFilter] = useState(
+    () => searchParams.get("difficulty") ?? "all"
+  );
+
+  const syncUrl = useCallback(
+    (updates: { company?: string; difficulty?: string }) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if ("company" in updates) {
+        if (updates.company && updates.company !== "all")
+          params.set("company", updates.company);
+        else params.delete("company");
+      }
+      if ("difficulty" in updates) {
+        if (updates.difficulty && updates.difficulty !== "all")
+          params.set("difficulty", updates.difficulty);
+        else params.delete("difficulty");
+      }
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [router, pathname, searchParams]
+  );
 
   const filtered = useMemo(() => {
     let result = [...scenarios];
@@ -244,8 +268,15 @@ function ScenariosContent() {
 
       {/* Filters */}
       <div className="mb-8 flex flex-col gap-4 rounded-xl border bg-muted/30 p-4 sm:flex-row sm:items-center">
-        <Select value={companyFilter} onValueChange={(v) => setCompanyFilter(v ?? "all")}>
-          <SelectTrigger className="w-[200px]">
+        <Select
+          value={companyFilter}
+          onValueChange={(v) => {
+            const next = v ?? "all";
+            setCompanyFilter(next);
+            syncUrl({ company: next });
+          }}
+        >
+          <SelectTrigger className="w-[200px]" aria-label="Filter by company">
             <SelectValue placeholder="Filter by company" />
           </SelectTrigger>
           <SelectContent>
@@ -260,8 +291,15 @@ function ScenariosContent() {
             })}
           </SelectContent>
         </Select>
-        <Select value={difficultyFilter} onValueChange={(v) => setDifficultyFilter(v ?? "all")}>
-          <SelectTrigger className="w-[200px]">
+        <Select
+          value={difficultyFilter}
+          onValueChange={(v) => {
+            const next = v ?? "all";
+            setDifficultyFilter(next);
+            syncUrl({ difficulty: next });
+          }}
+        >
+          <SelectTrigger className="w-[200px]" aria-label="Filter by difficulty">
             <SelectValue placeholder="Difficulty" />
           </SelectTrigger>
           <SelectContent>
@@ -271,7 +309,9 @@ function ScenariosContent() {
             <SelectItem value="advanced">Advanced</SelectItem>
           </SelectContent>
         </Select>
-        <Badge variant="secondary">{filtered.length} scenarios</Badge>
+        <Badge variant="secondary" aria-live="polite" aria-atomic="true">
+          {filtered.length} scenarios
+        </Badge>
       </div>
 
       {/* Scenario List */}
@@ -281,7 +321,7 @@ function ScenariosContent() {
             <ScenarioCard
               key={scenario.id}
               scenario={scenario}
-              defaultExpanded={index === 0 && preselectedCompany !== "all"}
+              defaultExpanded={index === 0 && companyFilter !== "all"}
             />
           ))}
         </div>

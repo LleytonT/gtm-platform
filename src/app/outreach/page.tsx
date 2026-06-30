@@ -148,8 +148,8 @@ function OutreachContent() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <Sparkles className="h-4 w-4" />
-                Configure Outreach
+                <Sparkles className="h-4 w-4" aria-hidden />
+                Configure outreach
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -176,7 +176,9 @@ function OutreachContent() {
                 <Label htmlFor="role">Target Role</Label>
                 <Input
                   id="role"
-                  placeholder="e.g. SDR, Commercial AE"
+                  name="target-role"
+                  autoComplete="organization-title"
+                  placeholder="e.g. SDR, Commercial AE…"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                   className="mt-1.5"
@@ -189,7 +191,10 @@ function OutreachContent() {
                 </Label>
                 <Input
                   id="manager"
-                  placeholder="e.g. Sarah Johnson"
+                  name="contact-name"
+                  autoComplete="name"
+                  spellCheck={false}
+                  placeholder="e.g. Sarah Johnson…"
                   value={managerName}
                   onChange={(e) => setManagerName(e.target.value)}
                   className="mt-1.5"

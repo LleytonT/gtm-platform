@@ -3,6 +3,7 @@ import { IBM_Plex_Mono, IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { SkipLink } from "@/components/skip-link";
 
 const sourceSerif = Source_Serif_4({
   variable: "--font-display",
@@ -40,9 +41,12 @@ export default function RootLayout({
       lang="en"
       className={`${sourceSerif.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col overflow-x-hidden touch-manipulation">
+        <SkipLink />
         <Nav />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1 scroll-mt-20">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

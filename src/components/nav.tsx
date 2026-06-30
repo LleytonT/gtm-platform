@@ -46,7 +46,7 @@ export function Nav() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors",
+                  "focus-ring flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors",
                   active
                     ? "bg-brief text-primary-foreground"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -74,23 +74,28 @@ export function Nav() {
           </SheetTrigger>
           <SheetContent side="right" className="w-72">
             <nav className="mt-8 flex flex-col gap-2" aria-label="Mobile">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors",
-                    pathname === item.href ||
-                      pathname.startsWith(item.href + "/")
-                      ? "bg-brief text-primary-foreground"
-                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                  )}
-                >
-                  <item.icon className="h-4 w-4" aria-hidden />
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const active =
+                  pathname === item.href ||
+                  pathname.startsWith(item.href + "/");
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "focus-ring flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors",
+                      active
+                        ? "bg-brief text-primary-foreground"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4" aria-hidden />
+                    {item.label}
+                  </Link>
+                );
+              })}
               <Button size="sm" className="mt-4" render={<Link href="/companies" />}>
                 Browse companies
               </Button>
