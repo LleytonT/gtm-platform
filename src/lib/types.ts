@@ -1,3 +1,65 @@
+export type ThreeTKey = "timing" | "territory" | "talent";
+
+export type ResearchLensId =
+  | "people_intel"
+  | "review_sites"
+  | "team_linkedin"
+  | "media_competition"
+  | "industry_growth";
+
+export type ResearchSentiment = "positive" | "neutral" | "red_flag";
+
+export interface ResearchFinding {
+  text: string;
+  sentiment: ResearchSentiment;
+  confidence: "high" | "medium" | "emerging";
+  feedsThreeT: ThreeTKey[];
+}
+
+export interface ResearchLensData {
+  score: number;
+  headline: string;
+  findings: ResearchFinding[];
+  checklist: string[];
+  resources?: { label: string; url: string }[];
+}
+
+export interface CompanyResearch {
+  lenses: Record<ResearchLensId, ResearchLensData>;
+  diligenceScore: number;
+}
+
+export type SignalSource =
+  | "linkedin"
+  | "hiring"
+  | "funding"
+  | "market"
+  | "community";
+
+export type GravyTrainVerdict =
+  | "On the gravy train"
+  | "Building momentum"
+  | "Watch closely"
+  | "Too early";
+
+export interface QualitativeSignal {
+  text: string;
+  source: SignalSource;
+  confidence: "high" | "medium" | "emerging";
+}
+
+export interface ThreeTDimension {
+  score: number;
+  verdict: string;
+  signals: QualitativeSignal[];
+}
+
+export interface ThreeTs {
+  timing: ThreeTDimension;
+  territory: ThreeTDimension;
+  talent: ThreeTDimension;
+}
+
 export interface Company {
   slug: string;
   name: string;
@@ -9,6 +71,10 @@ export interface Company {
   hq: string;
   founded: number;
   website: string;
+  sellsItself: string;
+  threeTs: ThreeTs;
+  gravyTrainScore: number;
+  gravyTrainVerdict: GravyTrainVerdict;
   financials: {
     score: number;
     revenue: string;
@@ -35,9 +101,9 @@ export interface Company {
     quota: string;
     quotaAttainment: string;
   };
-  overallScore: number;
   hiringRoles: string[];
   gtmTeamSize: string;
+  expandingRegions?: string[];
 }
 
 export interface OutreachTemplate {

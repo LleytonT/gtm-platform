@@ -1,6 +1,21 @@
-import { Company, Scenario } from "./types";
+import { Company, CompanyResearch, Scenario } from "./types";
+import { computeGravyTrainScore, getGravyTrainVerdict } from "./three-ts";
+import { buildResearchFromCompany } from "./research-playbook";
+import { getEnrichedResearch } from "./research-data";
 
-export const companies: Company[] = [
+function withGravyTrain(
+  company: Omit<Company, "gravyTrainScore" | "gravyTrainVerdict">
+): Company {
+  const gravyTrainScore = computeGravyTrainScore(company.threeTs);
+  return {
+    ...company,
+    gravyTrainScore,
+    gravyTrainVerdict: getGravyTrainVerdict(gravyTrainScore),
+  };
+}
+
+export const companies: Company[] = (
+  [
   {
     slug: "datadog",
     name: "Datadog",
@@ -13,6 +28,74 @@ export const companies: Company[] = [
     hq: "New York, NY",
     founded: 2010,
     website: "https://datadoghq.com",
+    sellsItself:
+      "Market leader with 26K+ customers — reps mostly expand existing accounts and ride inbound from the DevOps community.",
+    expandingRegions: ["APAC", "EMEA", "LATAM"],
+    threeTs: {
+      timing: {
+        score: 88,
+        verdict: "Security & observability tailwinds still strong",
+        signals: [
+          {
+            text: "CISO budgets expanding — security monitoring now a top-3 IT spend category",
+            source: "market",
+            confidence: "high",
+          },
+          {
+            text: "Multiple VPs of Sales posting about 'platform consolidation' plays in enterprise",
+            source: "linkedin",
+            confidence: "high",
+          },
+          {
+            text: "AI ops and LLM observability creating a new buying trigger in 2025–2026",
+            source: "market",
+            confidence: "emerging",
+          },
+        ],
+      },
+      territory: {
+        score: 85,
+        verdict: "APAC build-out with greenfield enterprise logos",
+        signals: [
+          {
+            text: "15+ APAC sales hires in Sydney, Singapore, and Tokyo in the last 6 months",
+            source: "linkedin",
+            confidence: "high",
+          },
+          {
+            text: "New 'Commercial' segment team targeting mid-market — less saturated than enterprise core",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "Security product line has its own AE pod — fresh territory vs. crowded infra AEs",
+            source: "community",
+            confidence: "medium",
+          },
+        ],
+      },
+      talent: {
+        score: 82,
+        verdict: "Massive GTM org, but competitive internally",
+        signals: [
+          {
+            text: "1,200+ GTM headcount with dedicated enablement and SE pods per segment",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "OTE $170K–$240K with RSUs — comp is strong but quota attainment is 68%",
+            source: "community",
+            confidence: "high",
+          },
+          {
+            text: "Reps report long ramp on enterprise accounts — talent advantage goes to experienced sellers",
+            source: "community",
+            confidence: "medium",
+          },
+        ],
+      },
+    },
     financials: {
       score: 92,
       revenue: "$2.1B ARR",
@@ -49,7 +132,6 @@ export const companies: Company[] = [
       quota: "$600K–$900K ARR",
       quotaAttainment: "68% of reps hit quota",
     },
-    overallScore: 92,
     hiringRoles: [
       "Commercial AE",
       "Enterprise AE",
@@ -70,6 +152,74 @@ export const companies: Company[] = [
     hq: "San Francisco, CA",
     founded: 2015,
     website: "https://gong.io",
+    sellsItself:
+      "Category-defining revenue intelligence — when the CRO has a pipeline problem, Gong is the default answer in sales Twitter and Slack.",
+    expandingRegions: ["EMEA", "APAC"],
+    threeTs: {
+      timing: {
+        score: 86,
+        verdict: "AI forecasting wave keeps Gong in every RFP",
+        signals: [
+          {
+            text: "Every Series B+ SaaS is evaluating conversation intelligence post-2024 funding resets",
+            source: "market",
+            confidence: "high",
+          },
+          {
+            text: "Gong Engage launch creating upsell motion — existing customers expanding seats",
+            source: "funding",
+            confidence: "high",
+          },
+          {
+            text: "CROs in coffee chats say 'we need Gong' before reps even pitch it",
+            source: "community",
+            confidence: "medium",
+          },
+        ],
+      },
+      territory: {
+        score: 80,
+        verdict: "EMEA expansion, but US enterprise is crowded",
+        signals: [
+          {
+            text: "Dublin and London GTM hubs hiring AEs and CS leaders aggressively",
+            source: "linkedin",
+            confidence: "high",
+          },
+          {
+            text: "Mid-market pod launched separately from enterprise — fresher patch for new reps",
+            source: "hiring",
+            confidence: "medium",
+          },
+          {
+            text: "APAC still early — first-mover advantage for reps who join now",
+            source: "community",
+            confidence: "emerging",
+          },
+        ],
+      },
+      talent: {
+        score: 90,
+        verdict: "72% quota attainment — they invest in reps who win",
+        signals: [
+          {
+            text: "OTE $180K–$260K with strong pre-IPO equity — top quartile for sales comp",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "Dedicated deal strategists and value engineers on enterprise deals",
+            source: "community",
+            confidence: "high",
+          },
+          {
+            text: "Remote-first with learning stipend — low attrition in GTM org",
+            source: "linkedin",
+            confidence: "medium",
+          },
+        ],
+      },
+    },
     financials: {
       score: 82,
       revenue: "$300M+ ARR",
@@ -106,7 +256,6 @@ export const companies: Company[] = [
       quota: "$500K–$800K ARR",
       quotaAttainment: "72% of reps hit quota",
     },
-    overallScore: 88,
     hiringRoles: ["Mid-Market AE", "Enterprise AE", "SDR", "Customer Success"],
     gtmTeamSize: "600+",
   },
@@ -122,6 +271,74 @@ export const companies: Company[] = [
     hq: "San Francisco, CA",
     founded: 2016,
     website: "https://rippling.com",
+    sellsItself:
+      "Compound startup in HR/IT/Finance — every new product line is a cross-sell into the same customer base. Reps sell expansion, not cold logos.",
+    expandingRegions: ["APAC", "EMEA", "US Enterprise"],
+    threeTs: {
+      timing: {
+        score: 94,
+        verdict: "100% growth + Series F — maximum buying urgency",
+        signals: [
+          {
+            text: "Series F at $11.25B (2024) with explicit GTM investment mandate",
+            source: "funding",
+            confidence: "high",
+          },
+          {
+            text: "HR/IT consolidation is the #1 ops priority for 200–2,000 employee companies",
+            source: "market",
+            confidence: "high",
+          },
+          {
+            text: "Founders Fund and Sequoia pushing international expansion in board updates",
+            source: "community",
+            confidence: "medium",
+          },
+        ],
+      },
+      territory: {
+        score: 92,
+        verdict: "New product GTM teams = fresh patches everywhere",
+        signals: [
+          {
+            text: "Separate AE teams for IT, Payroll, and Benefits — each is greenfield",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "APAC launch hiring country managers in Australia and Singapore",
+            source: "linkedin",
+            confidence: "high",
+          },
+          {
+            text: "Enterprise segment only 18 months old — territory still being carved",
+            source: "community",
+            confidence: "high",
+          },
+        ],
+      },
+      talent: {
+        score: 88,
+        verdict: "800+ GTM and hiring across every segment",
+        signals: [
+          {
+            text: "40+ open GTM roles on careers page across SMB, MM, and Enterprise",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "Reps get SE support and demo engineers on every deal — not a solo sport",
+            source: "community",
+            confidence: "medium",
+          },
+          {
+            text: "High-growth equity at $11B valuation — upside if IPO path holds",
+            source: "funding",
+            confidence: "medium",
+          },
+        ],
+      },
+    },
     financials: {
       score: 90,
       revenue: "$350M+ ARR",
@@ -163,7 +380,6 @@ export const companies: Company[] = [
       quota: "$500K–$750K ARR",
       quotaAttainment: "65% of reps hit quota",
     },
-    overallScore: 90,
     hiringRoles: ["SMB AE", "Mid-Market AE", "SDR", "Sales Engineer"],
     gtmTeamSize: "800+",
   },
@@ -179,6 +395,74 @@ export const companies: Company[] = [
     hq: "San Francisco, CA",
     founded: 2013,
     website: "https://notion.so",
+    sellsItself:
+      "30M users and bottoms-up adoption — enterprise reps convert teams already using Notion for free. The product walked in before you did.",
+    expandingRegions: ["EMEA", "APAC"],
+    threeTs: {
+      timing: {
+        score: 82,
+        verdict: "AI features driving enterprise upgrade cycle",
+        signals: [
+          {
+            text: "Notion AI pushing enterprise tier adoption — new budget line item for IT",
+            source: "market",
+            confidence: "high",
+          },
+          {
+            text: "Enterprise sales leaders hired from Figma and Slack in last 12 months",
+            source: "linkedin",
+            confidence: "high",
+          },
+          {
+            text: "Collaboration market consolidating — Notion winning vs. Confluence in head-to-heads",
+            source: "community",
+            confidence: "medium",
+          },
+        ],
+      },
+      territory: {
+        score: 78,
+        verdict: "Enterprise motion maturing, but still under-penetrated",
+        signals: [
+          {
+            text: "Enterprise AE team doubled in 2024 — territories still being assigned",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "EMEA hub in Dublin hiring first local AEs — greenfield region",
+            source: "linkedin",
+            confidence: "medium",
+          },
+          {
+            text: "Solutions Consultant roles opening — signal of complex deal motion",
+            source: "hiring",
+            confidence: "medium",
+          },
+        ],
+      },
+      talent: {
+        score: 80,
+        verdict: "Smaller GTM org but 70% attainment",
+        signals: [
+          {
+            text: "200+ GTM headcount — lean but high-performing team",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "70% quota attainment with PLG-sourced pipeline — reps aren't cold calling",
+            source: "community",
+            confidence: "high",
+          },
+          {
+            text: "Equity at $10B valuation limits upside — talent play is about lifestyle + brand",
+            source: "community",
+            confidence: "medium",
+          },
+        ],
+      },
+    },
     financials: {
       score: 78,
       revenue: "$250M+ ARR",
@@ -215,7 +499,6 @@ export const companies: Company[] = [
       quota: "$450K–$700K ARR",
       quotaAttainment: "70% of reps hit quota",
     },
-    overallScore: 83,
     hiringRoles: ["Enterprise AE", "SDR", "Solutions Consultant"],
     gtmTeamSize: "200+",
   },
@@ -231,6 +514,74 @@ export const companies: Company[] = [
     hq: "New York, NY",
     founded: 2017,
     website: "https://clay.com",
+    sellsItself:
+      "The product sales people sell to sales people. 100K+ users, viral in the SDR community — demos feel like showing someone their own superpower.",
+    expandingRegions: ["US Enterprise", "EMEA"],
+    threeTs: {
+      timing: {
+        score: 96,
+        verdict: "Outbound AI is the hottest GTM category right now",
+        signals: [
+          {
+            text: "Series B ($46M, 2024) at 300% YoY growth — board wants GTM scale yesterday",
+            source: "funding",
+            confidence: "high",
+          },
+          {
+            text: "Every VP Sales is asking 'what's our Clay strategy?' in 2025 planning",
+            source: "community",
+            confidence: "high",
+          },
+          {
+            text: "SDR teams replacing ZoomInfo + manual research stacks with Clay workflows",
+            source: "market",
+            confidence: "high",
+          },
+        ],
+      },
+      territory: {
+        score: 90,
+        verdict: "Moving upmarket — enterprise is wide open",
+        signals: [
+          {
+            text: "First enterprise AEs hired Q4 2024 — territories not yet carved",
+            source: "linkedin",
+            confidence: "high",
+          },
+          {
+            text: "Partnerships team building agency and consultant channel — new motion",
+            source: "hiring",
+            confidence: "medium",
+          },
+          {
+            text: "Only 60-person GTM team — every rep owns a massive patch",
+            source: "community",
+            confidence: "high",
+          },
+        ],
+      },
+      talent: {
+        score: 85,
+        verdict: "74% attainment on a product reps actually want to sell",
+        signals: [
+          {
+            text: "Early-stage equity with significant upside at Series B",
+            source: "funding",
+            confidence: "high",
+          },
+          {
+            text: "Reps come from the Clay community — they already know the product",
+            source: "community",
+            confidence: "high",
+          },
+          {
+            text: "Remote-first with team retreats — tight-knit GTM culture",
+            source: "linkedin",
+            confidence: "medium",
+          },
+        ],
+      },
+    },
     financials: {
       score: 75,
       revenue: "$50M+ ARR",
@@ -267,7 +618,6 @@ export const companies: Company[] = [
       quota: "$400K–$600K ARR",
       quotaAttainment: "74% of reps hit quota",
     },
-    overallScore: 83,
     hiringRoles: ["AE", "SDR", "Partnerships"],
     gtmTeamSize: "60+",
   },
@@ -283,6 +633,74 @@ export const companies: Company[] = [
     hq: "San Francisco, CA",
     founded: 2018,
     website: "https://vanta.com",
+    sellsItself:
+      "Compliance is a sales blocker — Vanta unblocks enterprise deals. When the CTO needs SOC 2 to close revenue, the product sells itself.",
+    expandingRegions: ["EMEA", "APAC"],
+    threeTs: {
+      timing: {
+        score: 91,
+        verdict: "Compliance is now a revenue prerequisite, not a nice-to-have",
+        signals: [
+          {
+            text: "Enterprise buyers requiring SOC 2/ISO on every vendor review — tailwind won't stop",
+            source: "market",
+            confidence: "high",
+          },
+          {
+            text: "Series C ($150M at $2.45B) funding explicit GTM expansion",
+            source: "funding",
+            confidence: "high",
+          },
+          {
+            text: "Health-tech and fintech startups losing deals without HIPAA — urgent trigger",
+            source: "community",
+            confidence: "high",
+          },
+        ],
+      },
+      territory: {
+        score: 86,
+        verdict: "New frameworks and segments = fresh patches",
+        signals: [
+          {
+            text: "Separate pods for HIPAA, GDPR, and FedRAMP — each is a new territory",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "Enterprise AE team growing 2x in 2024 — mid-market still under-covered",
+            source: "linkedin",
+            confidence: "high",
+          },
+          {
+            text: "EMEA compliance requirements creating region-specific GTM teams",
+            source: "market",
+            confidence: "medium",
+          },
+        ],
+      },
+      talent: {
+        score: 84,
+        verdict: "69% attainment with strong enablement",
+        signals: [
+          {
+            text: "150+ GTM with dedicated SEs on enterprise deals",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "Pre-IPO equity with strong upside at $2.45B valuation",
+            source: "funding",
+            confidence: "medium",
+          },
+          {
+            text: "Short sales cycles (30–60 days) — reps ramp fast on a product buyers need",
+            source: "community",
+            confidence: "high",
+          },
+        ],
+      },
+    },
     financials: {
       score: 84,
       revenue: "$150M+ ARR",
@@ -319,7 +737,6 @@ export const companies: Company[] = [
       quota: "$450K–$700K ARR",
       quotaAttainment: "69% of reps hit quota",
     },
-    overallScore: 85,
     hiringRoles: ["Mid-Market AE", "Enterprise AE", "SDR", "SE"],
     gtmTeamSize: "150+",
   },
@@ -335,6 +752,74 @@ export const companies: Company[] = [
     hq: "San Francisco, CA",
     founded: 2012,
     website: "https://figma.com",
+    sellsItself:
+      "Designers already chose Figma — enterprise reps convert bottom-up love into six-figure contracts. The hardest part is done before you pick up the phone.",
+    expandingRegions: ["EMEA", "APAC", "Enterprise US"],
+    threeTs: {
+      timing: {
+        score: 90,
+        verdict: "Post-Adobe deal, Figma is the default design standard",
+        signals: [
+          {
+            text: "Adobe acquisition blocked — Figma independence renewed enterprise confidence",
+            source: "funding",
+            confidence: "high",
+          },
+          {
+            text: "Dev Mode and FigJam expanding TAM beyond pure design teams",
+            source: "market",
+            confidence: "high",
+          },
+          {
+            text: "Series E at $12.5B — profitable and investing in enterprise GTM",
+            source: "funding",
+            confidence: "high",
+          },
+        ],
+      },
+      territory: {
+        score: 88,
+        verdict: "Enterprise Fortune 500 still largely Adobe — massive greenfield",
+        signals: [
+          {
+            text: "Enterprise AE team tripling — Fortune 500 logos unpenetrated",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "APAC design hub hiring in Tokyo and Sydney",
+            source: "linkedin",
+            confidence: "medium",
+          },
+          {
+            text: "FigJam and developer seats creating multi-stakeholder expansion plays",
+            source: "community",
+            confidence: "high",
+          },
+        ],
+      },
+      talent: {
+        score: 92,
+        verdict: "71% attainment with premium comp",
+        signals: [
+          {
+            text: "OTE $190K–$270K with RSUs at premium valuation",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "400+ GTM with world-class enablement — reps cite best sales culture they've seen",
+            source: "community",
+            confidence: "high",
+          },
+          {
+            text: "Dedicated SE and design ops teams on every enterprise deal",
+            source: "linkedin",
+            confidence: "medium",
+          },
+        ],
+      },
+    },
     financials: {
       score: 88,
       revenue: "$600M+ ARR",
@@ -371,7 +856,6 @@ export const companies: Company[] = [
       quota: "$550K–$850K ARR",
       quotaAttainment: "71% of reps hit quota",
     },
-    overallScore: 91,
     hiringRoles: ["Enterprise AE", "Mid-Market AE", "SDR", "SE"],
     gtmTeamSize: "400+",
   },
@@ -387,6 +871,74 @@ export const companies: Company[] = [
     hq: "San Francisco, CA",
     founded: 2017,
     website: "https://mercury.com",
+    sellsItself:
+      "200K+ startups already bank with Mercury — reps cross-sell treasury, credit, and spend into a warm book. YC network means referrals flow in.",
+    expandingRegions: ["US Mid-Market"],
+    threeTs: {
+      timing: {
+        score: 84,
+        verdict: "Startup banking + treasury expansion at Series C",
+        signals: [
+          {
+            text: "Series C ($120M at $3.5B, 2024) with credit and treasury product launches",
+            source: "funding",
+            confidence: "high",
+          },
+          {
+            text: "Startup banking market growing 25% CAGR — every new company needs a bank",
+            source: "market",
+            confidence: "high",
+          },
+          {
+            text: "SVB aftermath still driving startup bank-switching — one-time tailwind",
+            source: "community",
+            confidence: "medium",
+          },
+        ],
+      },
+      territory: {
+        score: 76,
+        verdict: "Moving upmarket but US-centric",
+        signals: [
+          {
+            text: "Mid-market AE roles opening for 500+ employee companies — new segment",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "Treasury and credit products have dedicated AE pods — cross-sell territory",
+            source: "hiring",
+            confidence: "medium",
+          },
+          {
+            text: "No APAC GTM yet — international expansion still ahead",
+            source: "linkedin",
+            confidence: "high",
+          },
+        ],
+      },
+      talent: {
+        score: 83,
+        verdict: "67% attainment, lean but well-supported team",
+        signals: [
+          {
+            text: "120+ GTM with partnerships motion feeding warm leads",
+            source: "hiring",
+            confidence: "high",
+          },
+          {
+            text: "High-growth equity at $3.5B — meaningful upside for early GTM hires",
+            source: "funding",
+            confidence: "medium",
+          },
+          {
+            text: "YC network referrals mean reps spend time closing, not prospecting",
+            source: "community",
+            confidence: "high",
+          },
+        ],
+      },
+    },
     financials: {
       score: 80,
       revenue: "$200M+ ARR",
@@ -423,11 +975,11 @@ export const companies: Company[] = [
       quota: "$400K–$650K ARR",
       quotaAttainment: "67% of reps hit quota",
     },
-    overallScore: 83,
     hiringRoles: ["Mid-Market AE", "SDR", "Partnerships Manager"],
     gtmTeamSize: "120+",
   },
-];
+  ] as Omit<Company, "gravyTrainScore" | "gravyTrainVerdict">[]
+).map(withGravyTrain);
 
 export const scenarios: Scenario[] = [
   {
@@ -636,6 +1188,10 @@ export function getCompanyBySlug(slug: string): Company | undefined {
 
 export function getScenariosByCompany(companySlug: string): Scenario[] {
   return scenarios.filter((s) => s.company === companySlug);
+}
+
+export function getResearchForCompany(company: Company): CompanyResearch {
+  return getEnrichedResearch(company.slug) ?? buildResearchFromCompany(company);
 }
 
 export function getScoreColor(score: number): string {

@@ -11,24 +11,36 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { CompanyCard } from "@/components/company-card";
+import { SignalSourceLegend } from "@/components/qualitative-signals";
 import { companies } from "@/lib/data";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { THREE_T_META } from "@/lib/three-ts";
+import { Search, SlidersHorizontal, Train } from "lucide-react";
 
-type SortOption = "overall" | "financials" | "pmf" | "packages" | "growth";
+type SortOption =
+  | "gravyTrain"
+  | "timing"
+  | "territory"
+  | "talent"
+  | "growth";
 
 export default function CompaniesPage() {
   const [search, setSearch] = useState("");
   const [industryFilter, setIndustryFilter] = useState("all");
-  const [stageFilter, setStageFilter] = useState("all");
-  const [sortBy, setSortBy] = useState<SortOption>("overall");
+  const [regionFilter, setRegionFilter] = useState("all");
+  const [gravyTrainOnly, setGravyTrainOnly] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>("gravyTrain");
 
   const industries = useMemo(
     () => [...new Set(companies.map((c) => c.industry))],
     []
   );
 
-  const stages = useMemo(
-    () => [...new Set(companies.map((c) => c.stage))],
+  const regions = useMemo(
+    () => [
+      ...new Set(
+        companies.flatMap((c) => c.expandingRegions ?? [])
+      ),
+    ],
     []
   );
 
@@ -41,6 +53,7 @@ export default function CompaniesPage() {
         (c) =>
           c.name.toLowerCase().includes(q) ||
           c.description.toLowerCase().includes(q) ||
+          c.sellsItself.toLowerCase().includes(q) ||
           c.industry.toLowerCase().includes(q)
       );
     }
@@ -49,40 +62,51 @@ export default function CompaniesPage() {
       result = result.filter((c) => c.industry === industryFilter);
     }
 
-    if (stageFilter !== "all") {
-      result = result.filter((c) => c.stage === stageFilter);
+    if (regionFilter !== "all") {
+      result = result.filter((c) =>
+        c.expandingRegions?.includes(regionFilter)
+      );
+    }
+
+    if (gravyTrainOnly) {
+      result = result.filter((c) => c.gravyTrainScore >= 90);
     }
 
     result.sort((a, b) => {
       switch (sortBy) {
-        case "financials":
-          return b.financials.score - a.financials.score;
-        case "pmf":
-          return b.pmf.score - a.pmf.score;
-        case "packages":
-          return b.packages.score - a.packages.score;
+        case "timing":
+          return b.threeTs.timing.score - a.threeTs.timing.score;
+        case "territory":
+          return b.threeTs.territory.score - a.threeTs.territory.score;
+        case "talent":
+          return b.threeTs.talent.score - a.threeTs.talent.score;
         case "growth":
           return (
             parseFloat(b.financials.growthRate) -
             parseFloat(a.financials.growthRate)
           );
         default:
-          return b.overallScore - a.overallScore;
+          return b.gravyTrainScore - a.gravyTrainScore;
       }
     });
 
     return result;
-  }, [search, industryFilter, stageFilter, sortBy]);
+  }, [search, industryFilter, regionFilter, gravyTrainOnly, sortBy]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8">
+        <Badge variant="secondary" className="mb-3">
+          <Train className="mr-1 h-3 w-3" />
+          Timing → Territory → Talent
+        </Badge>
         <h1 className="text-3xl font-bold tracking-tight">
-          Company Ratings
+          Find the gravy train
         </h1>
-        <p className="mt-2 text-muted-foreground">
-          Companies rated on what actually matters for GTM professionals —
-          financials, product-market fit, and compensation packages.
+        <p className="mt-2 max-w-2xl text-muted-foreground">
+          Companies where the product sells itself — scored on the Three
+          T&apos;s. We surface the qualitative signals a trained eye catches on
+          LinkedIn, in hiring patterns, and over coffee chats.
         </p>
       </div>
 
@@ -98,7 +122,10 @@ export default function CompaniesPage() {
           />
         </div>
         <div className="flex flex-wrap gap-3">
-          <Select value={industryFilter} onValueChange={(v) => setIndustryFilter(v ?? "all")}>
+          <Select
+            value={industryFilter}
+            onValueChange={(v) => setIndustryFilter(v ?? "all")}
+          >
             <SelectTrigger className="w-[180px]">
               <SlidersHorizontal className="mr-2 h-3 w-3" />
               <SelectValue placeholder="Industry" />
@@ -112,15 +139,18 @@ export default function CompaniesPage() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={stageFilter} onValueChange={(v) => setStageFilter(v ?? "all")}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Stage" />
+          <Select
+            value={regionFilter}
+            onValueChange={(v) => setRegionFilter(v ?? "all")}
+          >
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Region" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Stages</SelectItem>
-              {stages.map((stage) => (
-                <SelectItem key={stage} value={stage}>
-                  {stage}
+              <SelectItem value="all">All Regions</SelectItem>
+              {regions.map((region) => (
+                <SelectItem key={region} value={region}>
+                  {region}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -133,34 +163,54 @@ export default function CompaniesPage() {
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="overall">Overall Score</SelectItem>
-              <SelectItem value="financials">Financials</SelectItem>
-              <SelectItem value="pmf">Product-Market Fit</SelectItem>
-              <SelectItem value="packages">Comp Packages</SelectItem>
+              <SelectItem value="gravyTrain">Gravy Train Score</SelectItem>
+              <SelectItem value="timing">
+                {THREE_T_META.timing.label} (highest weight)
+              </SelectItem>
+              <SelectItem value="territory">
+                {THREE_T_META.territory.label}
+              </SelectItem>
+              <SelectItem value="talent">{THREE_T_META.talent.label}</SelectItem>
               <SelectItem value="growth">Growth Rate</SelectItem>
             </SelectContent>
           </Select>
+          <button
+            onClick={() => setGravyTrainOnly(!gravyTrainOnly)}
+            className={`inline-flex h-9 items-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors ${
+              gravyTrainOnly
+                ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                : "bg-background text-muted-foreground hover:bg-accent"
+            }`}
+          >
+            <Train className="h-3.5 w-3.5" />
+            Gravy train only
+          </button>
         </div>
       </div>
 
-      {/* Results count */}
-      <div className="mb-6 flex items-center gap-2">
-        <Badge variant="secondary">{filtered.length} companies</Badge>
-        {(search || industryFilter !== "all" || stageFilter !== "all") && (
-          <button
-            onClick={() => {
-              setSearch("");
-              setIndustryFilter("all");
-              setStageFilter("all");
-            }}
-            className="text-xs text-muted-foreground underline hover:text-foreground"
-          >
-            Clear filters
-          </button>
-        )}
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary">{filtered.length} companies</Badge>
+          {(search ||
+            industryFilter !== "all" ||
+            regionFilter !== "all" ||
+            gravyTrainOnly) && (
+            <button
+              onClick={() => {
+                setSearch("");
+                setIndustryFilter("all");
+                setRegionFilter("all");
+                setGravyTrainOnly(false);
+              }}
+              className="text-xs text-muted-foreground underline hover:text-foreground"
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+        <SignalSourceLegend />
       </div>
 
-      {/* Company grid */}
       {filtered.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((company) => (
