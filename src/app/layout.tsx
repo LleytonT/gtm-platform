@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GTM Hire — Find Companies Worth Selling For",
+  title: "GTM Hire — Find Companies Where the Product Sells Itself",
   description:
-    "The platform for SDRs and early GTM professionals to discover top companies, prepare outreach, and practice cold calls to land their next role.",
+    "Join the gravy train. We score companies on Timing, Territory, and Talent — surfacing the qualitative signals that tell you where the product sells itself.",
 };
 
 export default function RootLayout({

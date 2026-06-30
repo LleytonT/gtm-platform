@@ -15,7 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/companies", label: "Companies", icon: Building2 },
+  { href: "/companies", label: "Gravy Train", icon: Building2 },
   { href: "/outreach", label: "Outreach", icon: Mail },
   { href: "/scenarios", label: "Scenario Plays", icon: Phone },
 ];

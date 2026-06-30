@@ -14,8 +14,8 @@ export function Footer() {
               <span className="text-lg font-bold">GTM Hire</span>
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">
-              Helping GTM professionals find and land roles at companies worth
-              selling for.
+              Find companies where the product sells itself. Score the Three
+              T&apos;s — Timing, Territory, Talent — and join the gravy train.
             </p>
           </div>
           <div>
@@ -23,7 +23,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <Link href="/companies" className="hover:text-foreground">
-                  Company Ratings
+                  Gravy Train Finder
                 </Link>
               </li>
               <li>

@@ -1,3 +1,34 @@
+export type SignalSource =
+  | "linkedin"
+  | "hiring"
+  | "funding"
+  | "market"
+  | "community";
+
+export type GravyTrainVerdict =
+  | "On the gravy train"
+  | "Building momentum"
+  | "Watch closely"
+  | "Too early";
+
+export interface QualitativeSignal {
+  text: string;
+  source: SignalSource;
+  confidence: "high" | "medium" | "emerging";
+}
+
+export interface ThreeTDimension {
+  score: number;
+  verdict: string;
+  signals: QualitativeSignal[];
+}
+
+export interface ThreeTs {
+  timing: ThreeTDimension;
+  territory: ThreeTDimension;
+  talent: ThreeTDimension;
+}
+
 export interface Company {
   slug: string;
   name: string;
@@ -9,6 +40,10 @@ export interface Company {
   hq: string;
   founded: number;
   website: string;
+  sellsItself: string;
+  threeTs: ThreeTs;
+  gravyTrainScore: number;
+  gravyTrainVerdict: GravyTrainVerdict;
   financials: {
     score: number;
     revenue: string;
@@ -35,9 +70,9 @@ export interface Company {
     quota: string;
     quotaAttainment: string;
   };
-  overallScore: number;
   hiringRoles: string[];
   gtmTeamSize: string;
+  expandingRegions?: string[];
 }
 
 export interface OutreachTemplate {
