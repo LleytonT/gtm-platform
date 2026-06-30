@@ -20,7 +20,7 @@ export function GravyTrainBadge({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-semibold",
+        "inline-flex items-center gap-1.5 border px-3 py-1 font-mono-data font-semibold",
         getGravyTrainBg(score),
         getGravyTrainColor(score),
         size === "lg" ? "text-sm" : "text-xs"

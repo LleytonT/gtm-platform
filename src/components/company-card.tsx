@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { GravyTrainBadgeCompact } from "@/components/gravy-train-badge";
 import { ThreeTsOverview } from "@/components/three-ts-overview";
 import { ResearchPlaybookSummary } from "@/components/research-playbook";
-import { getResearchForCompany } from "@/lib/data";
 import {
   DollarSign,
   TrendingUp,
@@ -12,22 +11,26 @@ import {
   MapPin,
   Train,
 } from "lucide-react";
-import { Company } from "@/lib/types";
+import { Company, CompanyResearch } from "@/lib/types";
 
-export function CompanyCard({ company }: { company: Company }) {
-  const research = getResearchForCompany(company);
-
+export function CompanyCard({
+  company,
+  research,
+}: {
+  company: Company;
+  research: CompanyResearch;
+}) {
   return (
-    <Link href={`/companies/${company.slug}`}>
-      <Card className="group h-full transition-all hover:border-primary/20 hover:shadow-lg">
+    <Link href={`/companies/${company.slug}`} className="group block h-full">
+      <Card className="h-full border border-rule bg-card shadow-none transition-colors hover:border-brief/30 hover:bg-card/90">
         <CardContent className="pt-6">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border bg-white text-lg font-bold text-primary">
+              <div className="flex h-11 w-11 items-center justify-center border border-rule bg-background font-display text-lg font-semibold text-brief">
                 {company.name.charAt(0)}
               </div>
               <div>
-                <h3 className="font-semibold group-hover:text-primary">
+                <h3 className="font-display font-semibold group-hover:text-brief">
                   {company.name}
                 </h3>
                 <p className="text-xs text-muted-foreground">
@@ -35,17 +38,17 @@ export function CompanyCard({ company }: { company: Company }) {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
-              <Train className="h-3 w-3" />
+            <div className="font-mono-data flex items-center gap-1 border border-gravy/30 bg-gravy/10 px-2.5 py-1 text-xs font-semibold text-brief">
+              <Train className="h-3 w-3 text-gravy" aria-hidden />
               {company.gravyTrainScore}
             </div>
           </div>
 
-          <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
+          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
             {company.sellsItself}
           </p>
 
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap gap-2">
             <GravyTrainBadgeCompact verdict={company.gravyTrainVerdict} />
           </div>
 
@@ -53,28 +56,28 @@ export function CompanyCard({ company }: { company: Company }) {
             <ResearchPlaybookSummary research={research} />
           </div>
 
-          <div className="mt-4 border-t pt-4">
+          <div className="mt-4 border-t border-rule pt-4">
             <ThreeTsOverview threeTs={company.threeTs} size="sm" />
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2 border-t pt-4">
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <DollarSign className="h-3 w-3" />
-              OTE: {company.packages.ote}
-            </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <TrendingUp className="h-3 w-3" />
+          <div className="mt-4 flex flex-wrap gap-2 border-t border-rule pt-4 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1">
+              <DollarSign className="h-3 w-3" aria-hidden />
+              OTE {company.packages.ote}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <TrendingUp className="h-3 w-3" aria-hidden />
               {company.financials.growthRate}
-            </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Users className="h-3 w-3" />
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Users className="h-3 w-3" aria-hidden />
               {company.gtmTeamSize} GTM
-            </div>
+            </span>
             {company.expandingRegions && company.expandingRegions.length > 0 && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="h-3 w-3" />
+              <span className="inline-flex items-center gap-1">
+                <MapPin className="h-3 w-3" aria-hidden />
                 {company.expandingRegions.slice(0, 2).join(", ")}
-              </div>
+              </span>
             )}
           </div>
 

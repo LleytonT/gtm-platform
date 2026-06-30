@@ -49,7 +49,7 @@ export function ScoreRing({ score, label, size = "md" }: ScoreRingProps) {
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
             className={cn(
-              "font-bold",
+              "font-mono-data font-bold tabular-nums",
               size === "lg"
                 ? "text-2xl"
                 : size === "md"

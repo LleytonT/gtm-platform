@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,20 @@ import {
   getScoreLabel,
 } from "@/lib/data";
 import { THREE_T_META, THREE_T_ORDER } from "@/lib/three-ts";
-import { ResearchPlaybook } from "@/components/research-playbook";
+
+const ResearchPlaybook = dynamic(
+  () =>
+    import("@/components/research-playbook").then((m) => ({
+      default: m.ResearchPlaybook,
+    })),
+  {
+    loading: () => (
+      <div className="border border-dashed border-rule bg-card px-6 py-12 text-center text-sm text-muted-foreground">
+        Loading research playbook…
+      </div>
+    ),
+  }
+);
 import {
   ArrowLeft,
   TrendingUp,

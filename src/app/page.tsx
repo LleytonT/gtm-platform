@@ -1,20 +1,19 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { SectionHeader } from "@/components/section-header";
 import {
   Building2,
   Mail,
   Phone,
-  TrendingUp,
   ArrowRight,
   Train,
   Users,
-  Zap,
   Clock,
   Map,
   UserSearch,
   Coffee,
+  TrendingUp,
 } from "lucide-react";
 import { companies } from "@/lib/data";
 import { THREE_T_META } from "@/lib/three-ts";
@@ -27,64 +26,104 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b bg-gradient-to-b from-primary/5 via-background to-background">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-          <div className="mx-auto max-w-3xl text-center">
-            <Badge variant="secondary" className="mb-6">
-              <Train className="mr-1 h-3 w-3" />
-              Join the gravy train
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Find companies where the product{" "}
-              <span className="text-primary">sells itself</span>
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-muted-foreground sm:text-xl">
-              Loads of companies are expanding into APAC, hiring GTM teams, and
-              launching new segments — but only a trained eye spots the ones
-              where reps actually win. We read the signals so you don&apos;t have
-              to.
+      {/* Hero — asymmetric intelligence brief */}
+      <section className="hairline-b overflow-hidden">
+        <div className="mx-auto grid max-w-7xl lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="flex flex-col justify-center px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+            <p className="font-mono-data reveal-up text-xs font-medium uppercase tracking-[0.25em] text-gravy">
+              Gravy train intelligence
             </p>
-            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <h1 className="font-display reveal-up reveal-up-delay-1 mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem]">
+              Find companies where the product{" "}
+              <span className="text-brief underline decoration-gravy decoration-2 underline-offset-4">
+                sells itself
+              </span>
+            </h1>
+            <p className="reveal-up reveal-up-delay-2 mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+              APAC expansions, new GTM pods, fresh segments — the signals are
+              there. We read LinkedIn, hiring data, and coffee chat intel so you
+              know where reps actually win.
+            </p>
+            <div className="reveal-up reveal-up-delay-3 mt-10 flex flex-col gap-3 sm:flex-row">
               <Button size="lg" render={<Link href="/companies" />}>
-                <Train className="mr-2 h-4 w-4" />
-                Find the Gravy Train
+                <Train className="mr-2 h-4 w-4" aria-hidden />
+                Find the gravy train
               </Button>
-              <Button size="lg" variant="outline" render={<Link href="/scenarios" />}>
-                <Phone className="mr-2 h-4 w-4" />
-                Practice Cold Calls
+              <Button
+                size="lg"
+                variant="outline"
+                render={<Link href="/scenarios" />}
+              >
+                <Phone className="mr-2 h-4 w-4" aria-hidden />
+                Practice cold calls
               </Button>
             </div>
           </div>
+
+          <aside
+            className="hero-panel reveal-up reveal-up-delay-2 flex flex-col justify-center border-l border-white/10 px-4 py-12 sm:px-8 sm:py-16 lg:px-10"
+            aria-label="Top gravy train scores"
+          >
+            <p className="font-mono-data text-xs font-medium uppercase tracking-[0.2em] text-gravy">
+              Live index · Three T&apos;s weighted
+            </p>
+            <p className="mt-2 text-sm text-primary-foreground/70">
+              Highest-scoring companies right now
+            </p>
+            <div className="mt-8 space-y-3">
+              {gravyTrainCompanies.map((company, i) => (
+                <Link
+                  key={company.slug}
+                  href={`/companies/${company.slug}`}
+                  className="group flex items-center justify-between border border-white/10 bg-white/5 px-4 py-3 transition-colors hover:border-gravy/40 hover:bg-white/10"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono-data text-xs text-gravy/80">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <p className="font-medium text-primary-foreground group-hover:text-gravy">
+                        {company.name}
+                      </p>
+                      <p className="text-xs text-primary-foreground/50">
+                        T{company.threeTs.timing.score} · Tr
+                        {company.threeTs.territory.score} · Tl
+                        {company.threeTs.talent.score}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="font-mono-data text-2xl font-semibold tabular-nums text-gravy">
+                    {company.gravyTrainScore}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </aside>
         </div>
       </section>
 
       {/* Three T's Framework */}
-      <section className="border-b py-20">
+      <section className="hairline-b py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              The Three T&apos;s — in that order
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              There&apos;s a saying in sales: Timing, Territory, Talent determine
-              your success. In that order. Talent is the least important.
-            </p>
-          </div>
+          <SectionHeader
+            eyebrow="Timing → Territory → Talent"
+            title="The Three T's — in that order"
+            description="There's a saying in sales: Timing, Territory, Talent determine your success. In that order. Talent is the least important."
+          />
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             {(["timing", "territory", "talent"] as const).map((key) => {
               const meta = THREE_T_META[key];
               const Icon =
                 key === "timing" ? Clock : key === "territory" ? Map : Users;
               const colors = {
-                timing: "bg-amber-100 text-amber-700",
-                territory: "bg-blue-100 text-blue-700",
-                talent: "bg-purple-100 text-purple-700",
+                timing: "border-gravy/30 bg-gravy/10 text-gravy",
+                territory: "border-brief/20 bg-brief/5 text-brief",
+                talent: "border-signal/30 bg-signal/10 text-signal",
               };
 
               return (
-                <Card key={key} className="relative overflow-hidden">
-                  <div className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                <Card key={key} className="relative overflow-hidden border bg-card shadow-none">
+                  <div className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center border border-rule font-mono-data text-xs font-semibold">
                     {meta.order}
                   </div>
                   <CardContent className="pt-8">
@@ -113,18 +152,12 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
-              <Badge variant="secondary" className="mb-4">
-                <Zap className="mr-1 h-3 w-3" />
-                What a trained eye sees
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight">
-                The data job boards don&apos;t show you
-              </h2>
-              <p className="mt-4 text-lg text-muted-foreground">
-                A company posting &ldquo;we&apos;re hiring 50 AEs&rdquo; tells you
-                nothing. What matters is whether they&apos;re building a new APAC
-                pod, launching a fresh product line, or just backfilling churn.
-              </p>
+              <SectionHeader
+                align="left"
+                eyebrow="What a trained eye sees"
+                title="The data job boards don't show you"
+                description="A company posting 'we're hiring 50 AEs' tells you nothing. What matters is whether they're building a new APAC pod, launching a fresh product line, or just backfilling churn."
+              />
               <p className="mt-4 text-muted-foreground">
                 We track the qualitative signals that actually predict whether
                 you&apos;ll crush quota or burn out in month three.
