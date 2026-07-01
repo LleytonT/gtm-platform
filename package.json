@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "scrape:repvue": "tsx scripts/scrape-repvue.mts",
-    "build:repvue-cache": "tsx scripts/build-repvue-cache.mts"
+    "build:repvue-cache": "tsx scripts/build-repvue-cache.mts",
+    "scrape:exa": "tsx scripts/scrape-exa.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

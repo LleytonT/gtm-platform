@@ -4,6 +4,8 @@ import { buildResearchFromCompany } from "./research-playbook";
 import { getEnrichedResearch } from "./research-data";
 import { getCachedRepvueProfile } from "./scrapers/repvue/cache";
 import { mergeRepvueIntoResearch } from "./scrapers/repvue/merge-research";
+import { getCachedExaSignals } from "./scrapers/exa/cache";
+import { mergeExaIntoResearch } from "./scrapers/exa/merge-research";
 
 function withGravyTrain(
   company: Omit<Company, "gravyTrainScore" | "gravyTrainVerdict">
@@ -1193,11 +1195,20 @@ export function getScenariosByCompany(companySlug: string): Scenario[] {
 }
 
 export function getResearchForCompany(company: Company): CompanyResearch {
-  const base =
+  let research =
     getEnrichedResearch(company.slug) ?? buildResearchFromCompany(company);
+
   const repvue = getCachedRepvueProfile(company.slug);
-  if (!repvue) return base;
-  return mergeRepvueIntoResearch(base, repvue);
+  if (repvue) {
+    research = mergeRepvueIntoResearch(research, repvue);
+  }
+
+  const exa = getCachedExaSignals(company.slug);
+  if (exa) {
+    research = mergeExaIntoResearch(research, exa);
+  }
+
+  return research;
 }
 
 export function getScoreColor(score: number): string {
