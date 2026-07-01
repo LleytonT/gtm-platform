@@ -10,6 +10,7 @@ import {
   ResearchFinding,
   ResearchLensId,
 } from "@/lib/types";
+import { getCachedRepvueProfile, getRepvueCacheMeta } from "@/lib/scrapers/repvue/cache";
 import {
   RESEARCH_LENS_META,
   RESEARCH_LENS_ORDER,
@@ -203,10 +204,14 @@ function LensPanel({
 export function ResearchPlaybook({
   research,
   companyName,
+  companySlug,
 }: {
   research: CompanyResearch;
   companyName: string;
+  companySlug: string;
 }) {
+  const repvue = getCachedRepvueProfile(companySlug);
+  const cacheMeta = getRepvueCacheMeta();
   return (
     <section>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -214,6 +219,11 @@ export function ResearchPlaybook({
           <Badge variant="secondary" className="mb-2">
             5-step research playbook
           </Badge>
+          {repvue && (
+            <Badge variant="outline" className="mb-2 ml-2 text-[10px]">
+              RepVue data · {new Date(cacheMeta.scrapedAt).toLocaleDateString()}
+            </Badge>
+          )}
           <h2 className="text-2xl font-bold">How we diligenced {companyName}</h2>
           <p className="mt-1 max-w-2xl text-muted-foreground">
             Your research workflow, systematized. Each lens feeds the Three
@@ -280,6 +290,20 @@ export function ResearchPlaybook({
               The checklist is yours to complete. Found something we missed?
               That&apos;s the highest-signal data we can add.
             </p>
+            {repvue && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                Review site data sourced from{" "}
+                <a
+                  href="https://www.repvue.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2"
+                >
+                  RepVue
+                </a>
+                .
+              </p>
+            )}
           </div>
           <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/companies" />}>
             Compare companies

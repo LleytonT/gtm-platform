@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "scrape:repvue": "tsx scripts/scrape-repvue.mts",
+    "build:repvue-cache": "tsx scripts/build-repvue-cache.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -28,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }

@@ -208,7 +208,11 @@ export default async function CompanyDetailPage(
 
       {/* Research Playbook — the 5-step diligence workflow */}
       <div className="mb-12">
-        <ResearchPlaybook research={research} companyName={company.name} />
+        <ResearchPlaybook
+          research={research}
+          companyName={company.name}
+          companySlug={slug}
+        />
       </div>
 
       {/* Supporting context */}
