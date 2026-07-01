@@ -9,7 +9,10 @@ import type {
 } from "./types";
 
 const GTM_TITLE =
-  /account executive|ae\b|sdr|bdr|sales development|sales manager|vp.{0,20}sales|head of sales|cro\b|revenue|customer success manager|sales engineer/i;
+  /account executive|\bae\b|sdr|bdr|sales development|sales manager|vp.{0,20}sales|head of sales|cro\b|chief revenue|customer success manager|sales engineer/i;
+
+const NON_GTM_TITLE =
+  /^(?!.*\b(account executive|sales|revenue|sdr|bdr|cro)\b).*marketing|product marketing|brand marketing|communications|public relations|\bpr\b/i;
 
 const LEADERSHIP_TITLE =
   /vp|vice president|head of|director|cro|chief revenue/i;
@@ -38,7 +41,18 @@ function monthsBetween(from: string | null, to: Date = new Date()): number | nul
 }
 
 function isGtmRole(title: string): boolean {
+  if (NON_GTM_TITLE.test(title)) return false;
   return GTM_TITLE.test(title);
+}
+
+function isLeadershipRole(title: string): boolean {
+  return LEADERSHIP_TITLE.test(title);
+}
+
+// Remove erroneous multi-decade tenures from bad source dates
+function sanitizeTenureMonths(months: number): number | null {
+  if (months > 120) return null;
+  return months;
 }
 
 function getRolesAtCompany(
@@ -87,7 +101,10 @@ function computeTenure(
   const tenures = people
     .map((person) => {
       const current = getCurrentRoleAtCompany(person, companyName);
-      return current ? monthsBetween(current.from) : null;
+      if (!current) return null;
+      const raw = monthsBetween(current.from);
+      if (raw == null) return null;
+      return sanitizeTenureMonths(raw);
     })
     .filter((months): months is number => months != null);
 
@@ -264,6 +281,4 @@ export function scoreFromExaSignals(signals: ExaCompanySignals): number {
   return Math.min(98, Math.max(40, Math.round(score)));
 }
 
-export function isLeadershipRole(title: string): boolean {
-  return LEADERSHIP_TITLE.test(title);
-}
+export { isLeadershipRole };

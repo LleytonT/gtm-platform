@@ -1,46 +1,31 @@
+import Exa from "exa-js";
 import { buildPeopleQueries } from "./queries";
 import { dedupePeople, parsePersonFromResult } from "./parse";
 import { buildCompanySignals } from "./signals";
 import type { ExaCompanySignals, ExaSearchResponse } from "./types";
 
-const EXA_SEARCH_URL = "https://api.exa.ai/search";
-
-function getApiKey(): string {
+function getExaClient(): Exa {
   const key = process.env.EXA_API_KEY;
   if (!key) {
     throw new Error(
-      "EXA_API_KEY is not set. Add it to your environment or .env.local"
+      "EXA_API_KEY is not set. Add it to .env.local or your environment."
     );
   }
-  return key;
+  return new Exa(key);
 }
 
 async function searchPeople(
   query: string,
   numResults: number
 ): Promise<ExaSearchResponse> {
-  const response = await fetch(EXA_SEARCH_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": getApiKey(),
-    },
-    body: JSON.stringify({
-      query,
-      category: "people",
-      type: "auto",
-      numResults,
-      contents: { highlights: true },
-    }),
-    cache: "no-store",
+  const exa = getExaClient();
+  const result = await exa.search(query, {
+    type: "auto",
+    category: "people",
+    numResults,
+    contents: { highlights: true },
   });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Exa search failed (${response.status}): ${body.slice(0, 200)}`);
-  }
-
-  return (await response.json()) as ExaSearchResponse;
+  return result as ExaSearchResponse;
 }
 
 export async function fetchExaCompanySignals(

@@ -8,27 +8,27 @@ export function buildPeopleQueries(companyName: string): ExaPeopleQuery[] {
   return [
     {
       id: "aes",
-      query: `Account Executives at ${companyName}`,
+      query: `account executive at ${companyName}`,
       numResults: 30,
     },
     {
       id: "sdrs",
-      query: `SDRs and BDRs at ${companyName}`,
+      query: `SDR or BDR at ${companyName}`,
       numResults: 20,
     },
     {
       id: "leadership",
-      query: `VP of Sales OR Head of Sales OR CRO at ${companyName}`,
+      query: `VP of Sales or Head of Sales at ${companyName}`,
       numResults: 15,
     },
     {
       id: "managers",
-      query: `Sales Manager OR Account Executive Manager at ${companyName}`,
+      query: `sales manager at ${companyName}`,
       numResults: 15,
     },
     {
       id: "alumni",
-      query: `former sales reps and account executives who previously worked at ${companyName}`,
+      query: `former account executive who worked at ${companyName}`,
       numResults: 15,
     },
   ];
