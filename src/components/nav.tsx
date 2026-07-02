@@ -5,13 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Building2, Mail, Phone, Menu, Train } from "lucide-react";
+import { BarChart3, Building2, Menu, Train } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/companies", label: "Gravy train", icon: Building2 },
-  { href: "/outreach", label: "Outreach", icon: Mail },
-  { href: "/scenarios", label: "Scenario plays", icon: Phone },
+  { href: "/", label: "Benchmarks", icon: BarChart3 },
+  { href: "/companies", label: "Companies", icon: Building2 },
 ];
 
 export function Nav() {
@@ -30,7 +29,7 @@ export function Nav() {
               GTM Hire
             </span>
             <span className="font-mono-data block text-[10px] uppercase tracking-widest text-muted-foreground">
-              Intelligence brief
+              Benchmarks
             </span>
           </div>
         </Link>
@@ -38,8 +37,10 @@ export function Nav() {
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
           {navItems.map((item) => {
             const active =
-              pathname === item.href ||
-              pathname.startsWith(item.href + "/");
+              item.href === "/"
+                ? pathname === "/"
+                : pathname === item.href ||
+                  pathname.startsWith(item.href + "/");
             return (
               <Link
                 key={item.href}
@@ -61,7 +62,7 @@ export function Nav() {
 
         <div className="hidden md:block">
           <Button size="sm" render={<Link href="/companies" />}>
-            Browse companies
+            All companies
           </Button>
         </div>
 
@@ -76,8 +77,10 @@ export function Nav() {
             <nav className="mt-8 flex flex-col gap-2" aria-label="Mobile">
               {navItems.map((item) => {
                 const active =
-                  pathname === item.href ||
-                  pathname.startsWith(item.href + "/");
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname === item.href ||
+                      pathname.startsWith(item.href + "/");
                 return (
                   <Link
                     key={item.href}
@@ -97,7 +100,7 @@ export function Nav() {
                 );
               })}
               <Button size="sm" className="mt-4" render={<Link href="/companies" />}>
-                Browse companies
+                All companies
               </Button>
             </nav>
           </SheetContent>

@@ -24,7 +24,12 @@ type SortOption =
   | "timing"
   | "territory"
   | "talent"
-  | "growth";
+  | "growth"
+  | "gtm_momentum"
+  | "funding_velocity"
+  | "quota_reality";
+
+type CategoryFilter = "all" | "forbes_ai50" | "hyperscaler" | "established";
 
 export type CompanyListItem = {
   company: Company;
@@ -51,6 +56,9 @@ export default function CompaniesClient({
   const [regionFilter, setRegionFilter] = useState(
     () => searchParams.get("region") ?? "all"
   );
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>(
+    () => (searchParams.get("category") as CategoryFilter) ?? "all"
+  );
   const [gravyTrainOnly, setGravyTrainOnly] = useState(
     () => searchParams.get("gravy") === "1"
   );
@@ -65,6 +73,7 @@ export default function CompaniesClient({
       region?: string;
       gravy?: boolean;
       sort?: string;
+      category?: string;
     }) => {
       const params = new URLSearchParams(searchParams.toString());
 
@@ -91,6 +100,11 @@ export default function CompaniesClient({
         if (updates.sort && updates.sort !== "gravyTrain")
           params.set("sort", updates.sort);
         else params.delete("sort");
+      }
+      if ("category" in updates) {
+        if (updates.category && updates.category !== "all")
+          params.set("category", updates.category);
+        else params.delete("category");
       }
 
       const qs = params.toString();
@@ -124,6 +138,12 @@ export default function CompaniesClient({
       result = result.filter(({ company: c }) => c.industry === industryFilter);
     }
 
+    if (categoryFilter !== "all") {
+      result = result.filter(({ company: c }) =>
+        c.categories.includes(categoryFilter)
+      );
+    }
+
     if (regionFilter !== "all") {
       result = result.filter(({ company: c }) =>
         c.expandingRegions?.includes(regionFilter)
@@ -149,16 +169,26 @@ export default function CompaniesClient({
             parseFloat(b.company.financials.growthRate) -
             parseFloat(a.company.financials.growthRate)
           );
+        case "gtm_momentum":
+          return b.company.benchmarks.gtmMomentum - a.company.benchmarks.gtmMomentum;
+        case "funding_velocity":
+          return b.company.benchmarks.fundingVelocity - a.company.benchmarks.fundingVelocity;
+        case "quota_reality":
+          return b.company.benchmarks.quotaReality - a.company.benchmarks.quotaReality;
         default:
           return b.company.gravyTrainScore - a.company.gravyTrainScore;
       }
     });
 
     return result;
-  }, [items, search, industryFilter, regionFilter, gravyTrainOnly, sortBy]);
+  }, [items, search, industryFilter, categoryFilter, regionFilter, gravyTrainOnly, sortBy]);
 
   const hasFilters =
-    search || industryFilter !== "all" || regionFilter !== "all" || gravyTrainOnly;
+    search ||
+    industryFilter !== "all" ||
+    categoryFilter !== "all" ||
+    regionFilter !== "all" ||
+    gravyTrainOnly;
 
   const resultsMessage = hasFilters
     ? `${filtered.length} companies match your filters`
@@ -168,9 +198,9 @@ export default function CompaniesClient({
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <SectionHeader
         align="left"
-        eyebrow="Timing → Territory → Talent"
-        title="Find the gravy train"
-        description="Companies where the product sells itself — scored on the Three T's with qualitative signals from LinkedIn, hiring data, and coffee chats."
+        eyebrow="Forbes AI 50 · Hyperscalers · SaaS"
+        title="Company benchmarks"
+        description="Compare GTM signals across companies — gravy train scores, momentum, funding velocity, and quota reality."
         className="mb-8"
       />
 
@@ -196,6 +226,28 @@ export default function CompaniesClient({
           />
         </div>
         <div className="flex flex-wrap gap-3">
+          <Select
+            value={categoryFilter}
+            onValueChange={(v) => {
+              const next = (v ?? "all") as CategoryFilter;
+              setCategoryFilter(next);
+              syncUrl({ category: next });
+            }}
+          >
+            <SelectTrigger
+              id="category-filter"
+              className="w-[160px] border-rule bg-background"
+              aria-label="Filter by category"
+            >
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All categories</SelectItem>
+              <SelectItem value="forbes_ai50">Forbes AI 50</SelectItem>
+              <SelectItem value="hyperscaler">Hyperscalers</SelectItem>
+              <SelectItem value="established">Established SaaS</SelectItem>
+            </SelectContent>
+          </Select>
           <Select
             value={industryFilter}
             onValueChange={(v) => {
@@ -262,6 +314,9 @@ export default function CompaniesClient({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="gravyTrain">Gravy train score</SelectItem>
+              <SelectItem value="gtm_momentum">GTM momentum</SelectItem>
+              <SelectItem value="funding_velocity">Funding velocity</SelectItem>
+              <SelectItem value="quota_reality">Quota reality</SelectItem>
               <SelectItem value="timing">
                 {THREE_T_META.timing.label} (highest weight)
               </SelectItem>
@@ -303,6 +358,7 @@ export default function CompaniesClient({
               onClick={() => {
                 setSearch("");
                 setIndustryFilter("all");
+                setCategoryFilter("all");
                 setRegionFilter("all");
                 setGravyTrainOnly(false);
                 setSortBy("gravyTrain");

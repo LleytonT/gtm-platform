@@ -12,8 +12,6 @@ import {
   Globe,
   Building2,
   Briefcase,
-  Mail,
-  Phone,
   ExternalLink,
   Train,
   Clock,
@@ -32,11 +30,12 @@ import {
   companies,
   getCompanyBySlug,
   getResearchForCompany,
-  getScenariosByCompany,
   getScoreColor,
   getScoreBg,
   getScoreLabel,
 } from "@/lib/data";
+import { COMP_MODEL_LABELS, SALES_MOTION_LABELS } from "@/lib/benchmarks";
+import { getActivitiesForCompany } from "@/lib/notable-activity";
 import { THREE_T_META, THREE_T_ORDER } from "@/lib/three-ts";
 import { cn } from "@/lib/utils";
 
@@ -76,8 +75,8 @@ export default async function CompanyDetailPage(
     notFound();
   }
 
-  const scenarios = getScenariosByCompany(slug);
   const research = getResearchForCompany(company);
+  const activities = getActivitiesForCompany(slug);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -134,6 +133,21 @@ export default async function CompanyDetailPage(
                 <ExternalLink className="h-3 w-3" />
               </a>
             </div>
+            {company.categories.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {company.categories.map((cat) => (
+                  <Badge key={cat} variant="secondary" className="text-xs capitalize">
+                    {cat.replace("_", " ")}
+                  </Badge>
+                ))}
+                <Badge variant="outline" className="text-xs">
+                  {SALES_MOTION_LABELS[company.salesMotion]}
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  {COMP_MODEL_LABELS[company.compModel]}
+                </Badge>
+              </div>
+            )}
             {company.expandingRegions && company.expandingRegions.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {company.expandingRegions.map((region) => (
@@ -146,18 +160,30 @@ export default async function CompanyDetailPage(
             )}
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button render={<Link href={`/outreach?company=${company.slug}`} />}>
-            <Mail className="mr-2 h-4 w-4" />
-            Build Outreach
-          </Button>
-          {scenarios.length > 0 && (
-            <Button variant="outline" render={<Link href={`/scenarios?company=${company.slug}`} />}>
-              <Phone className="mr-2 h-4 w-4" />
-              Practice Pitch
-            </Button>
-          )}
-        </div>
+      </div>
+
+      {/* Benchmark scores */}
+      <div className="mb-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {[
+          { label: "Gravy Train", value: company.gravyTrainScore },
+          { label: "GTM Momentum", value: company.benchmarks.gtmMomentum },
+          { label: "Funding", value: company.benchmarks.fundingVelocity },
+          { label: "Quota Reality", value: company.benchmarks.quotaReality },
+          { label: "Regional", value: company.benchmarks.regionalBalance },
+          { label: "PMF", value: company.benchmarks.pmfStrength },
+        ].map((b) => (
+          <div
+            key={b.label}
+            className="border border-rule bg-card px-3 py-3 text-center"
+          >
+            <p className="font-mono-data text-[10px] uppercase tracking-wider text-muted-foreground">
+              {b.label}
+            </p>
+            <p className={cn("font-mono-data mt-1 text-2xl font-semibold tabular-nums", getScoreColor(b.value))}>
+              {b.value}
+            </p>
+          </div>
+        ))}
       </div>
 
       {/* Three T's — the core framework */}
@@ -373,24 +399,29 @@ export default async function CompanyDetailPage(
 
           <Card className={cn("border-2", getScoreBg(company.gravyTrainScore))}>
             <CardHeader>
-              <CardTitle className="text-base">Join the gravy train</CardTitle>
+              <CardTitle className="text-base">Benchmark verdict</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">
                 {company.gravyTrainVerdict === "On the gravy train"
-                  ? "This one checks out. The product sells itself and the Three T's are aligned."
-                  : "Review the Three T's above before you commit. Timing matters most."}
+                  ? "Strong across benchmarks — product momentum and GTM investment align."
+                  : "Review benchmark dimensions above. Regional and quota signals matter most."}
               </p>
-              <Button className="w-full" render={<Link href={`/outreach?company=${company.slug}`} />}>
-                <Mail className="mr-2 h-4 w-4" />
-                Generate Outreach
-              </Button>
-              {scenarios.length > 0 && (
-                <Button className="w-full" variant="outline" render={<Link href={`/scenarios?company=${company.slug}`} />}>
-                  <Phone className="mr-2 h-4 w-4" />
-                  Practice Mock Call
-                </Button>
+              {activities.length > 0 && (
+                <div className="space-y-2 border-t border-rule pt-3">
+                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    Recent activity
+                  </p>
+                  {activities.map((a) => (
+                    <p key={a.id} className="text-xs text-muted-foreground">
+                      <span className="font-medium text-foreground">{a.headline}</span>
+                    </p>
+                  ))}
+                </div>
               )}
+              <Button className="w-full" variant="outline" render={<Link href="/" />}>
+                Compare benchmarks
+              </Button>
             </CardContent>
           </Card>
         </div>

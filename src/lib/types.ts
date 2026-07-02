@@ -60,6 +60,26 @@ export interface ThreeTs {
   talent: ThreeTDimension;
 }
 
+export type CompanyCategory = "forbes_ai50" | "hyperscaler" | "established";
+
+export type SalesMotion =
+  | "enterprise"
+  | "mid_market"
+  | "smb"
+  | "partner_led"
+  | "consumption"
+  | "hybrid";
+
+export type CompModel = "booking" | "consumption" | "hybrid";
+
+export interface GtmBenchmarks {
+  gtmMomentum: number;
+  fundingVelocity: number;
+  regionalBalance: number;
+  quotaReality: number;
+  pmfStrength: number;
+}
+
 export interface Company {
   slug: string;
   name: string;
@@ -72,6 +92,10 @@ export interface Company {
   founded: number;
   website: string;
   sellsItself: string;
+  categories: CompanyCategory[];
+  salesMotion: SalesMotion;
+  compModel: CompModel;
+  benchmarks: GtmBenchmarks;
   threeTs: ThreeTs;
   gravyTrainScore: number;
   gravyTrainVerdict: GravyTrainVerdict;
@@ -106,24 +130,22 @@ export interface Company {
   expandingRegions?: string[];
 }
 
-export interface OutreachTemplate {
-  id: string;
-  type: "email" | "linkedin" | "referral";
-  subject?: string;
-  body: string;
-  context: string;
-}
+export type NotableActivityType =
+  | "funding"
+  | "hiring"
+  | "expansion"
+  | "leadership"
+  | "product"
+  | "contraction";
 
-export interface Scenario {
+export interface NotableActivity {
   id: string;
-  title: string;
-  description: string;
-  company: string;
-  targetRole: string;
-  targetCompany: string;
-  difficulty: "beginner" | "intermediate" | "advanced";
-  objectives: string[];
-  talkingPoints: string[];
-  objections: string[];
-  successCriteria: string[];
+  date: string;
+  companySlug: string;
+  companyName: string;
+  type: NotableActivityType;
+  headline: string;
+  detail: string;
+  impact: "positive" | "neutral" | "negative";
+  feedsThreeT: ThreeTKey[];
 }
