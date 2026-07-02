@@ -1,0 +1,966 @@
+{
+  "version": 1,
+  "scrapedAt": "2026-07-01T00:28:11.180Z",
+  "companies": {
+    "clay": {
+      "companySlug": "clay",
+      "repvueSlug": "clay",
+      "name": "Clay",
+      "canonicalUrl": "https://www.repvue.com/companies/clay",
+      "website": "https://clay.com",
+      "description": "Clay is an AI-driven go-to-market (GTM) development platform that equips growth and sales teams with customer data and automated workflows. The company provides access to over 150 premium data providers, AI research agents, and intent signals to help businesses find, contact, and close customers more effectively. Clay's platform combines first-party data, intent data, and third-party data from multiple sources in one place, enabling GTM teams to conduct deeper customer research and automate outreach without writing code. Founded in 2017 by Kareem Amin and Nicolae Rusan (with Varun Anand joining as co-founder in 2021), Clay started as an enhanced spreadsheet tool connecting external databases and evolved into a comprehensive sales intelligence and automation platform. The company spent six years refining its product before experiencing explosive growth starting in 2022. Clay's platform enables users to aggregate data from 150+ sources, build AI-powered workflows with Claygent, create custom signals to track buyer intent, and automate personalized outreach at scale.",
+      "industry": "Software",
+      "companySize": "1,001-10,000",
+      "headcount": 1320,
+      "fundingStatus": "venture_capital",
+      "hq": "New York City, NY",
+      "generatedAt": "2026-07-01T00:25:24Z",
+      "fetchedAt": "2026-07-01T00:28:11.180Z",
+      "repvueScore": 81.89,
+      "overallPercentile": 69,
+      "industryPercentile": 79,
+      "trend": "trending down",
+      "totalRatings": 13,
+      "verifiedPercent": 100,
+      "writtenReviews": 3,
+      "ratingsLast6Months": 10,
+      "lastRatingRecorded": "2026-06-05",
+      "categoryRankings": [
+        {
+          "category": "Culture and Leadership",
+          "percentile": 77,
+          "industryRank": 739,
+          "industryTotal": 0
+        },
+        {
+          "category": "Base Compensation",
+          "percentile": 8,
+          "industryRank": 3054,
+          "industryTotal": 0
+        },
+        {
+          "category": "Incentive Compensation Structure",
+          "percentile": 7,
+          "industryRank": 3076,
+          "industryTotal": 0
+        },
+        {
+          "category": "Product - Market Fit",
+          "percentile": 98,
+          "industryRank": 39,
+          "industryTotal": 0
+        },
+        {
+          "category": "Professional Development and Training",
+          "percentile": 52,
+          "industryRank": 1575,
+          "industryTotal": 0
+        },
+        {
+          "category": "Inbound Lead / Opportunity Flow",
+          "percentile": 95,
+          "industryRank": 132,
+          "industryTotal": 0
+        },
+        {
+          "category": "Diversity and Inclusion",
+          "percentile": 95,
+          "industryRank": 147,
+          "industryTotal": 0
+        }
+      ],
+      "compensation": [
+        {
+          "role": "Mid Market Account Executive",
+          "baseUpTo": 130000,
+          "oteUpTo": 200000,
+          "topPerformerEarnings": 275000,
+          "sampleSize": 4,
+          "estimated": false
+        },
+        {
+          "role": "Enterprise Account Executive",
+          "baseUpTo": 175000,
+          "oteUpTo": 230000,
+          "topPerformerEarnings": 293125,
+          "sampleSize": 8,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive",
+          "baseUpTo": 175000,
+          "oteUpTo": 245000,
+          "topPerformerEarnings": 296818,
+          "sampleSize": 11,
+          "estimated": false
+        }
+      ],
+      "quotaAttainmentPublic": false,
+      "attribution": "RepVue (https://www.repvue.com)"
+    },
+    "datadog": {
+      "companySlug": "datadog",
+      "repvueSlug": "Datadog",
+      "name": "Datadog",
+      "canonicalUrl": "https://www.repvue.com/companies/Datadog",
+      "website": "https://www.datadoghq.com/",
+      "description": "Datadog is the monitoring and security platform for cloud applications. Our SaaS product is used by organizations of all sizes across a wide range of industries to enable digital transformation, cloud migration, and infrastructure monitoring of our customers’ entire technology stack, allowing for seamless collaboration and problem-solving among Dev, Ops and Security teams globally. Datadogs are solving tough problems, taking smart risks, and celebrating each other's wins. Let’s grow together!",
+      "industry": "Software",
+      "companySize": "1,001-10,000",
+      "headcount": 9327,
+      "fundingStatus": "public_market",
+      "hq": "New York City, NY",
+      "generatedAt": "2026-07-01T00:25:24Z",
+      "fetchedAt": "2026-07-01T00:28:11.180Z",
+      "repvueScore": 83.65,
+      "overallPercentile": 75,
+      "industryPercentile": 84,
+      "trend": "flat",
+      "totalRatings": 2569,
+      "verifiedPercent": 86.7,
+      "writtenReviews": 576,
+      "ratingsLast6Months": 367,
+      "lastRatingRecorded": "2026-07-01",
+      "categoryRankings": [
+        {
+          "category": "Culture and Leadership",
+          "percentile": 77,
+          "industryRank": 747,
+          "industryTotal": 0
+        },
+        {
+          "category": "Base Compensation",
+          "percentile": 31,
+          "industryRank": 2292,
+          "industryTotal": 0
+        },
+        {
+          "category": "Incentive Compensation Structure",
+          "percentile": 64,
+          "industryRank": 1152,
+          "industryTotal": 0
+        },
+        {
+          "category": "Product - Market Fit",
+          "percentile": 93,
+          "industryRank": 230,
+          "industryTotal": 0
+        },
+        {
+          "category": "Professional Development and Training",
+          "percentile": 95,
+          "industryRank": 160,
+          "industryTotal": 0
+        },
+        {
+          "category": "Inbound Lead / Opportunity Flow",
+          "percentile": 37,
+          "industryRank": 2101,
+          "industryTotal": 0
+        },
+        {
+          "category": "Diversity and Inclusion",
+          "percentile": 58,
+          "industryRank": 1366,
+          "industryTotal": 0
+        }
+      ],
+      "compensation": [
+        {
+          "role": "Sales Development Manager",
+          "baseUpTo": 85000,
+          "oteUpTo": 140000,
+          "topPerformerEarnings": 172000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive Manager",
+          "baseUpTo": 130000,
+          "oteUpTo": 280000,
+          "topPerformerEarnings": 420789,
+          "sampleSize": 19,
+          "estimated": false
+        },
+        {
+          "role": "Customer Success Manager",
+          "baseUpTo": 100000,
+          "oteUpTo": 120000,
+          "topPerformerEarnings": 122500,
+          "sampleSize": 14,
+          "estimated": false
+        },
+        {
+          "role": "Sales Engineer",
+          "baseUpTo": 135000,
+          "oteUpTo": 180000,
+          "topPerformerEarnings": 220000,
+          "sampleSize": 21,
+          "estimated": false
+        },
+        {
+          "role": "Account Manager",
+          "baseUpTo": 180000,
+          "oteUpTo": 360000,
+          "topPerformerEarnings": 818666,
+          "sampleSize": 15,
+          "estimated": false
+        },
+        {
+          "role": "Sales Development Representative",
+          "baseUpTo": 75000,
+          "oteUpTo": 115000,
+          "topPerformerEarnings": 180652,
+          "sampleSize": 23,
+          "estimated": false
+        },
+        {
+          "role": "SLED Account Executive",
+          "baseUpTo": 160000,
+          "oteUpTo": 325000,
+          "topPerformerEarnings": 878000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Strategic Account Executive",
+          "baseUpTo": 175000,
+          "oteUpTo": 380000,
+          "topPerformerEarnings": 1101250,
+          "sampleSize": 8,
+          "estimated": false
+        },
+        {
+          "role": "SMB Account Executive",
+          "baseUpTo": 70000,
+          "oteUpTo": 130000,
+          "topPerformerEarnings": 266612,
+          "sampleSize": 155,
+          "estimated": false
+        },
+        {
+          "role": "Mid Market Account Executive",
+          "baseUpTo": 95000,
+          "oteUpTo": 185000,
+          "topPerformerEarnings": 370833,
+          "sampleSize": 24,
+          "estimated": false
+        },
+        {
+          "role": "Enterprise Account Executive",
+          "baseUpTo": 165000,
+          "oteUpTo": 325000,
+          "topPerformerEarnings": 1020606,
+          "sampleSize": 66,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive",
+          "baseUpTo": 130000,
+          "oteUpTo": 250000,
+          "topPerformerEarnings": 504628,
+          "sampleSize": 256,
+          "estimated": false
+        }
+      ],
+      "quotaAttainmentPublic": false,
+      "attribution": "RepVue (https://www.repvue.com)"
+    },
+    "figma": {
+      "companySlug": "figma",
+      "repvueSlug": "Figma",
+      "name": "Figma",
+      "canonicalUrl": "https://www.repvue.com/companies/Figma",
+      "website": "https://figma.com",
+      "description": "Figma is a design platform for teams who build products together. Born on the Web, Figma helps teams create, share, test, and ship better designs from start to finish. Whether it's consolidating tools, simplifying workflows, or collaborating across teams and time zones, Figma makes the design process faster, more efficient, and fun while keeping everyone on the same page.",
+      "industry": "Software",
+      "companySize": "1,001-10,000",
+      "headcount": 2931,
+      "fundingStatus": "public_market",
+      "hq": "San Francisco, CA",
+      "generatedAt": "2026-07-01T00:25:25Z",
+      "fetchedAt": "2026-07-01T00:28:11.180Z",
+      "repvueScore": 83.82,
+      "overallPercentile": 76,
+      "industryPercentile": 85,
+      "trend": "flat",
+      "totalRatings": 330,
+      "verifiedPercent": 86.4,
+      "writtenReviews": 68,
+      "ratingsLast6Months": 62,
+      "lastRatingRecorded": "2026-06-24",
+      "categoryRankings": [
+        {
+          "category": "Culture and Leadership",
+          "percentile": 62,
+          "industryRank": 1228,
+          "industryTotal": 0
+        },
+        {
+          "category": "Base Compensation",
+          "percentile": 57,
+          "industryRank": 1406,
+          "industryTotal": 0
+        },
+        {
+          "category": "Incentive Compensation Structure",
+          "percentile": 60,
+          "industryRank": 1304,
+          "industryTotal": 0
+        },
+        {
+          "category": "Product - Market Fit",
+          "percentile": 93,
+          "industryRank": 201,
+          "industryTotal": 0
+        },
+        {
+          "category": "Professional Development and Training",
+          "percentile": 80,
+          "industryRank": 635,
+          "industryTotal": 0
+        },
+        {
+          "category": "Inbound Lead / Opportunity Flow",
+          "percentile": 54,
+          "industryRank": 1485,
+          "industryTotal": 0
+        },
+        {
+          "category": "Diversity and Inclusion",
+          "percentile": 70,
+          "industryRank": 966,
+          "industryTotal": 0
+        }
+      ],
+      "compensation": [
+        {
+          "role": "Federal Account Executive",
+          "baseUpTo": 150000,
+          "oteUpTo": 325000,
+          "topPerformerEarnings": 475000,
+          "sampleSize": 4,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive Manager",
+          "baseUpTo": 130000,
+          "oteUpTo": 295000,
+          "topPerformerEarnings": 476000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Sales Engineer",
+          "baseUpTo": 185000,
+          "oteUpTo": 225000,
+          "topPerformerEarnings": 276000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Account Manager",
+          "baseUpTo": 160000,
+          "oteUpTo": 320000,
+          "topPerformerEarnings": 644705,
+          "sampleSize": 17,
+          "estimated": false
+        },
+        {
+          "role": "Sales Development Representative",
+          "baseUpTo": 75000,
+          "oteUpTo": 155000,
+          "topPerformerEarnings": 168000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Strategic Account Executive",
+          "baseUpTo": 200000,
+          "oteUpTo": 400000,
+          "topPerformerEarnings": 545000,
+          "sampleSize": 4,
+          "estimated": false
+        },
+        {
+          "role": "SMB Account Executive",
+          "baseUpTo": 85000,
+          "oteUpTo": 175000,
+          "topPerformerEarnings": 686363,
+          "sampleSize": 11,
+          "estimated": false
+        },
+        {
+          "role": "Mid Market Account Executive",
+          "baseUpTo": 110000,
+          "oteUpTo": 210000,
+          "topPerformerEarnings": 293333,
+          "sampleSize": 18,
+          "estimated": false
+        },
+        {
+          "role": "Enterprise Account Executive",
+          "baseUpTo": 160000,
+          "oteUpTo": 325000,
+          "topPerformerEarnings": 579600,
+          "sampleSize": 25,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive",
+          "baseUpTo": 150000,
+          "oteUpTo": 320000,
+          "topPerformerEarnings": 506271,
+          "sampleSize": 59,
+          "estimated": false
+        },
+        {
+          "role": "SLED Account Executive",
+          "baseUpTo": 150000,
+          "oteUpTo": 300000,
+          "topPerformerEarnings": 750000,
+          "sampleSize": null,
+          "estimated": true
+        }
+      ],
+      "quotaAttainmentPublic": false,
+      "attribution": "RepVue (https://www.repvue.com)"
+    },
+    "gong": {
+      "companySlug": "gong",
+      "repvueSlug": "Gongio",
+      "name": "Gong.io",
+      "canonicalUrl": "https://www.repvue.com/companies/Gongio",
+      "website": "https://www.gong.io/",
+      "description": "Gong is where top reps go to win bigger. We're redefining how revenue teams operate with AI that actually helps reps sell - giving them the insights, signals, and tools to close more deals with less guesswork. You're not just selling a product; you're bringing a platform that top companies rely on to drive real revenue impact. Here, you'll be surrounded by ambitious, high-performing teammates who push you to level up, backed by a culture built on transparency, trust, and winning together. If you want to sharpen your craft, accelerate your growth, and be part of a category-defining company, Gong is the place to do it.",
+      "industry": "Software",
+      "companySize": "1,001-10,000",
+      "headcount": 2558,
+      "fundingStatus": "venture_capital",
+      "hq": "San Francisco, CA",
+      "generatedAt": "2026-07-01T00:25:23Z",
+      "fetchedAt": "2026-07-01T00:28:11.180Z",
+      "repvueScore": 88.28,
+      "overallPercentile": 88,
+      "industryPercentile": 94,
+      "trend": "flat",
+      "totalRatings": 1145,
+      "verifiedPercent": 90.9,
+      "writtenReviews": 185,
+      "ratingsLast6Months": 134,
+      "lastRatingRecorded": "2026-06-30",
+      "categoryRankings": [
+        {
+          "category": "Culture and Leadership",
+          "percentile": 89,
+          "industryRank": 336,
+          "industryTotal": 0
+        },
+        {
+          "category": "Base Compensation",
+          "percentile": 57,
+          "industryRank": 1389,
+          "industryTotal": 0
+        },
+        {
+          "category": "Incentive Compensation Structure",
+          "percentile": 83,
+          "industryRank": 542,
+          "industryTotal": 0
+        },
+        {
+          "category": "Product - Market Fit",
+          "percentile": 93,
+          "industryRank": 218,
+          "industryTotal": 0
+        },
+        {
+          "category": "Professional Development and Training",
+          "percentile": 97,
+          "industryRank": 80,
+          "industryTotal": 0
+        },
+        {
+          "category": "Inbound Lead / Opportunity Flow",
+          "percentile": 69,
+          "industryRank": 1007,
+          "industryTotal": 0
+        },
+        {
+          "category": "Diversity and Inclusion",
+          "percentile": 63,
+          "industryRank": 1213,
+          "industryTotal": 0
+        }
+      ],
+      "compensation": [
+        {
+          "role": "Sales Development Manager",
+          "baseUpTo": 130000,
+          "oteUpTo": 200000,
+          "topPerformerEarnings": 225000,
+          "sampleSize": 4,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive Manager",
+          "baseUpTo": 155000,
+          "oteUpTo": 325000,
+          "topPerformerEarnings": 497000,
+          "sampleSize": 10,
+          "estimated": false
+        },
+        {
+          "role": "Customer Success Manager",
+          "baseUpTo": 155000,
+          "oteUpTo": 205000,
+          "topPerformerEarnings": 202941,
+          "sampleSize": 17,
+          "estimated": false
+        },
+        {
+          "role": "Sales Engineer",
+          "baseUpTo": 115000,
+          "oteUpTo": 175000,
+          "topPerformerEarnings": 263000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Account Manager",
+          "baseUpTo": 120000,
+          "oteUpTo": 240000,
+          "topPerformerEarnings": 610000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Sales Development Representative",
+          "baseUpTo": 65000,
+          "oteUpTo": 95000,
+          "topPerformerEarnings": 157826,
+          "sampleSize": 46,
+          "estimated": false
+        },
+        {
+          "role": "Strategic Account Executive",
+          "baseUpTo": 165000,
+          "oteUpTo": 330000,
+          "topPerformerEarnings": 986000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "SMB Account Executive",
+          "baseUpTo": 72500,
+          "oteUpTo": 145000,
+          "topPerformerEarnings": 313055,
+          "sampleSize": 36,
+          "estimated": false
+        },
+        {
+          "role": "Mid Market Account Executive",
+          "baseUpTo": 105000,
+          "oteUpTo": 210000,
+          "topPerformerEarnings": 576666,
+          "sampleSize": 63,
+          "estimated": false
+        },
+        {
+          "role": "Enterprise Account Executive",
+          "baseUpTo": 165000,
+          "oteUpTo": 330000,
+          "topPerformerEarnings": 1346842,
+          "sampleSize": 38,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive",
+          "baseUpTo": 135000,
+          "oteUpTo": 270000,
+          "topPerformerEarnings": 721021,
+          "sampleSize": 137,
+          "estimated": false
+        }
+      ],
+      "quotaAttainmentPublic": false,
+      "attribution": "RepVue (https://www.repvue.com)"
+    },
+    "mercury": {
+      "companySlug": "mercury",
+      "repvueSlug": "Mercury",
+      "name": "Mercury",
+      "canonicalUrl": "https://www.repvue.com/companies/Mercury",
+      "website": "https://mercury.com/",
+      "description": "Mercury is a fintech platform offering business banking solutions tailored for startups. It provides FDIC-insured accounts through partner banks, along with tools for managing payments, expenses, and treasury services. Key features include bill payments, invoicing, corporate cards, and venture debt, all accessible through a single dashboard. Mercury simplifies financial workflows while offering access to advanced tools for managing and growing startup finances.",
+      "industry": "Finance",
+      "companySize": "1,001-10,000",
+      "headcount": 1608,
+      "fundingStatus": "venture_capital",
+      "hq": "San Francisco, CA",
+      "generatedAt": "2026-07-01T00:25:24Z",
+      "fetchedAt": "2026-07-01T00:28:11.180Z",
+      "repvueScore": 94.35,
+      "overallPercentile": 96,
+      "industryPercentile": 100,
+      "trend": "flat",
+      "totalRatings": 47,
+      "verifiedPercent": 95.7,
+      "writtenReviews": 12,
+      "ratingsLast6Months": 21,
+      "lastRatingRecorded": "2026-06-25",
+      "categoryRankings": [
+        {
+          "category": "Culture and Leadership",
+          "percentile": 99,
+          "industryRank": 3,
+          "industryTotal": 0
+        },
+        {
+          "category": "Base Compensation",
+          "percentile": 98,
+          "industryRank": 8,
+          "industryTotal": 0
+        },
+        {
+          "category": "Incentive Compensation Structure",
+          "percentile": 67,
+          "industryRank": 131,
+          "industryTotal": 0
+        },
+        {
+          "category": "Product - Market Fit",
+          "percentile": 98,
+          "industryRank": 8,
+          "industryTotal": 0
+        },
+        {
+          "category": "Professional Development and Training",
+          "percentile": 99,
+          "industryRank": 4,
+          "industryTotal": 0
+        },
+        {
+          "category": "Inbound Lead / Opportunity Flow",
+          "percentile": 91,
+          "industryRank": 36,
+          "industryTotal": 0
+        },
+        {
+          "category": "Diversity and Inclusion",
+          "percentile": 95,
+          "industryRank": 19,
+          "industryTotal": 0
+        }
+      ],
+      "compensation": [
+        {
+          "role": "Sales Development Representative",
+          "baseUpTo": 88000,
+          "oteUpTo": 90000,
+          "topPerformerEarnings": 89466,
+          "sampleSize": 15,
+          "estimated": false
+        },
+        {
+          "role": "SMB Account Executive",
+          "baseUpTo": 155000,
+          "oteUpTo": 165000,
+          "topPerformerEarnings": 197500,
+          "sampleSize": 10,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive",
+          "baseUpTo": 165000,
+          "oteUpTo": 165000,
+          "topPerformerEarnings": 194545,
+          "sampleSize": 11,
+          "estimated": false
+        }
+      ],
+      "quotaAttainmentPublic": false,
+      "attribution": "RepVue (https://www.repvue.com)"
+    },
+    "notion": {
+      "companySlug": "notion",
+      "repvueSlug": "Notion",
+      "name": "Notion",
+      "canonicalUrl": "https://www.repvue.com/companies/Notion",
+      "website": "https://notion.so",
+      "description": "Notion blends your everyday work tools into one. Product roadmap? Company wiki? Meeting notes? With Notion, they're all in one place, and totally customizable to meet the needs of any workflow. It's the all-in-one workspace for you, your team, and your whole company. We humans are toolmakers by nature, but most of us can't build or modify the software we use every day — arguably our most powerful tool. Our team at Notion is on a mission to make it possible for everyone to shape the tools that shape their lives.",
+      "industry": "Software",
+      "companySize": "1,001-10,000",
+      "headcount": 5971,
+      "fundingStatus": "venture_capital",
+      "hq": "San Francisco, CA",
+      "generatedAt": "2026-07-01T00:25:25Z",
+      "fetchedAt": "2026-07-01T00:28:11.180Z",
+      "repvueScore": 87.27,
+      "overallPercentile": 86,
+      "industryPercentile": 93,
+      "trend": "flat",
+      "totalRatings": 105,
+      "verifiedPercent": 85.7,
+      "writtenReviews": 32,
+      "ratingsLast6Months": 28,
+      "lastRatingRecorded": "2026-06-29",
+      "categoryRankings": [
+        {
+          "category": "Culture and Leadership",
+          "percentile": 82,
+          "industryRank": 561,
+          "industryTotal": 0
+        },
+        {
+          "category": "Base Compensation",
+          "percentile": 88,
+          "industryRank": 374,
+          "industryTotal": 0
+        },
+        {
+          "category": "Incentive Compensation Structure",
+          "percentile": 76,
+          "industryRank": 774,
+          "industryTotal": 0
+        },
+        {
+          "category": "Product - Market Fit",
+          "percentile": 79,
+          "industryRank": 661,
+          "industryTotal": 0
+        },
+        {
+          "category": "Professional Development and Training",
+          "percentile": 89,
+          "industryRank": 335,
+          "industryTotal": 0
+        },
+        {
+          "category": "Inbound Lead / Opportunity Flow",
+          "percentile": 64,
+          "industryRank": 1174,
+          "industryTotal": 0
+        },
+        {
+          "category": "Diversity and Inclusion",
+          "percentile": 86,
+          "industryRank": 449,
+          "industryTotal": 0
+        }
+      ],
+      "compensation": [
+        {
+          "role": "Account Executive Manager",
+          "baseUpTo": 210000,
+          "oteUpTo": 350000,
+          "topPerformerEarnings": 498000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Customer Success Manager",
+          "baseUpTo": 110000,
+          "oteUpTo": 145000,
+          "topPerformerEarnings": 167000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Account Manager",
+          "baseUpTo": 200000,
+          "oteUpTo": 260000,
+          "topPerformerEarnings": 312500,
+          "sampleSize": 4,
+          "estimated": false
+        },
+        {
+          "role": "Sales Development Representative",
+          "baseUpTo": 95000,
+          "oteUpTo": 135000,
+          "topPerformerEarnings": 168333,
+          "sampleSize": 6,
+          "estimated": false
+        },
+        {
+          "role": "SMB Account Executive",
+          "baseUpTo": 110000,
+          "oteUpTo": 185000,
+          "topPerformerEarnings": 218571,
+          "sampleSize": 7,
+          "estimated": false
+        },
+        {
+          "role": "Mid Market Account Executive",
+          "baseUpTo": 140000,
+          "oteUpTo": 250000,
+          "topPerformerEarnings": 674444,
+          "sampleSize": 9,
+          "estimated": false
+        },
+        {
+          "role": "Enterprise Account Executive",
+          "baseUpTo": 150000,
+          "oteUpTo": 295000,
+          "topPerformerEarnings": 656000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive",
+          "baseUpTo": 140000,
+          "oteUpTo": 250000,
+          "topPerformerEarnings": 516666,
+          "sampleSize": 18,
+          "estimated": false
+        }
+      ],
+      "quotaAttainmentPublic": false,
+      "attribution": "RepVue (https://www.repvue.com)"
+    },
+    "vanta": {
+      "companySlug": "vanta",
+      "repvueSlug": "Vanta",
+      "name": "Vanta",
+      "canonicalUrl": "https://www.repvue.com/companies/Vanta",
+      "website": "https://vanta.com",
+      "description": "Our mission at Vanta is to be a layer of trust on top of cloud services, to secure the internet, increase trust in software companies, and keep consumer data safe. Think of us as your automated security and compliance expert.",
+      "industry": "Software",
+      "companySize": "1,001-10,000",
+      "headcount": 1882,
+      "fundingStatus": "venture_capital",
+      "hq": "San Francisco, CA",
+      "generatedAt": "2026-07-01T00:25:24Z",
+      "fetchedAt": "2026-07-01T00:28:11.180Z",
+      "repvueScore": 87.89,
+      "overallPercentile": 87,
+      "industryPercentile": 93,
+      "trend": "flat",
+      "totalRatings": 447,
+      "verifiedPercent": 92.4,
+      "writtenReviews": 109,
+      "ratingsLast6Months": 119,
+      "lastRatingRecorded": "2026-06-30",
+      "categoryRankings": [
+        {
+          "category": "Culture and Leadership",
+          "percentile": 71,
+          "industryRank": 952,
+          "industryTotal": 0
+        },
+        {
+          "category": "Base Compensation",
+          "percentile": 89,
+          "industryRank": 338,
+          "industryTotal": 0
+        },
+        {
+          "category": "Incentive Compensation Structure",
+          "percentile": 83,
+          "industryRank": 553,
+          "industryTotal": 0
+        },
+        {
+          "category": "Product - Market Fit",
+          "percentile": 90,
+          "industryRank": 322,
+          "industryTotal": 0
+        },
+        {
+          "category": "Professional Development and Training",
+          "percentile": 83,
+          "industryRank": 545,
+          "industryTotal": 0
+        },
+        {
+          "category": "Inbound Lead / Opportunity Flow",
+          "percentile": 87,
+          "industryRank": 403,
+          "industryTotal": 0
+        },
+        {
+          "category": "Diversity and Inclusion",
+          "percentile": 61,
+          "industryRank": 1276,
+          "industryTotal": 0
+        }
+      ],
+      "compensation": [
+        {
+          "role": "Account Executive Manager",
+          "baseUpTo": 185000,
+          "oteUpTo": 340000,
+          "topPerformerEarnings": 510000,
+          "sampleSize": 8,
+          "estimated": false
+        },
+        {
+          "role": "Customer Success Manager",
+          "baseUpTo": 150000,
+          "oteUpTo": 170000,
+          "topPerformerEarnings": 270000,
+          "sampleSize": 5,
+          "estimated": false
+        },
+        {
+          "role": "Account Manager",
+          "baseUpTo": 126000,
+          "oteUpTo": 210000,
+          "topPerformerEarnings": 246000,
+          "sampleSize": 15,
+          "estimated": false
+        },
+        {
+          "role": "Sales Development Representative",
+          "baseUpTo": 70000,
+          "oteUpTo": 100000,
+          "topPerformerEarnings": 132909,
+          "sampleSize": 33,
+          "estimated": false
+        },
+        {
+          "role": "SMB Account Executive",
+          "baseUpTo": 110000,
+          "oteUpTo": 220000,
+          "topPerformerEarnings": 342068,
+          "sampleSize": 29,
+          "estimated": false
+        },
+        {
+          "role": "Mid Market Account Executive",
+          "baseUpTo": 140000,
+          "oteUpTo": 260000,
+          "topPerformerEarnings": 533392,
+          "sampleSize": 28,
+          "estimated": false
+        },
+        {
+          "role": "Enterprise Account Executive",
+          "baseUpTo": 165000,
+          "oteUpTo": 330000,
+          "topPerformerEarnings": 620333,
+          "sampleSize": 15,
+          "estimated": false
+        },
+        {
+          "role": "Account Executive",
+          "baseUpTo": 145000,
+          "oteUpTo": 265000,
+          "topPerformerEarnings": 495342,
+          "sampleSize": 73,
+          "estimated": false
+        },
+        {
+          "role": "Sales Engineer",
+          "baseUpTo": 165000,
+          "oteUpTo": 225000,
+          "topPerformerEarnings": 200000,
+          "sampleSize": null,
+          "estimated": true
+        }
+      ],
+      "quotaAttainmentPublic": false,
+      "attribution": "RepVue (https://www.repvue.com)"
+    }
+  }
+}
