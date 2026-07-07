@@ -1,4 +1,4 @@
-import { Company, CompanyResearch, Scenario } from "./types";
+import { Company, CompanyResearch } from "./types";
 import { computeGravyTrainScore, getGravyTrainVerdict } from "./three-ts";
 import { buildResearchFromCompany } from "./research-playbook";
 import { getEnrichedResearch } from "./research-data";
@@ -6,6 +6,8 @@ import { getCachedRepvueProfile } from "./scrapers/repvue/cache";
 import { mergeRepvueIntoResearch } from "./scrapers/repvue/merge-research";
 import { getCachedExaSignals } from "./scrapers/exa/cache";
 import { mergeExaIntoResearch } from "./scrapers/exa/merge-research";
+import { seedToCompany } from "./company-factory";
+import { forbesAi50Seeds, hyperscalerSeeds } from "./company-seeds";
 
 function withGravyTrain(
   company: Omit<Company, "gravyTrainScore" | "gravyTrainVerdict">
@@ -18,7 +20,124 @@ function withGravyTrain(
   };
 }
 
-export const companies: Company[] = (
+const CORE_BENCHMARK_META: Record<
+  string,
+  Pick<Company, "categories" | "salesMotion" | "compModel" | "benchmarks">
+> = {
+  datadog: {
+    categories: ["established"],
+    salesMotion: "enterprise",
+    compModel: "consumption",
+    benchmarks: {
+      gtmMomentum: 82,
+      fundingVelocity: 88,
+      regionalBalance: 85,
+      quotaReality: 68,
+      pmfStrength: 95,
+    },
+  },
+  gong: {
+    categories: ["established"],
+    salesMotion: "enterprise",
+    compModel: "booking",
+    benchmarks: {
+      gtmMomentum: 78,
+      fundingVelocity: 75,
+      regionalBalance: 72,
+      quotaReality: 72,
+      pmfStrength: 90,
+    },
+  },
+  rippling: {
+    categories: ["established"],
+    salesMotion: "mid_market",
+    compModel: "booking",
+    benchmarks: {
+      gtmMomentum: 92,
+      fundingVelocity: 90,
+      regionalBalance: 80,
+      quotaReality: 78,
+      pmfStrength: 88,
+    },
+  },
+  notion: {
+    categories: ["forbes_ai50", "established"],
+    salesMotion: "hybrid",
+    compModel: "booking",
+    benchmarks: {
+      gtmMomentum: 80,
+      fundingVelocity: 78,
+      regionalBalance: 78,
+      quotaReality: 70,
+      pmfStrength: 88,
+    },
+  },
+  clay: {
+    categories: ["established"],
+    salesMotion: "mid_market",
+    compModel: "booking",
+    benchmarks: {
+      gtmMomentum: 94,
+      fundingVelocity: 88,
+      regionalBalance: 75,
+      quotaReality: 82,
+      pmfStrength: 92,
+    },
+  },
+  vanta: {
+    categories: ["established"],
+    salesMotion: "mid_market",
+    compModel: "booking",
+    benchmarks: {
+      gtmMomentum: 86,
+      fundingVelocity: 85,
+      regionalBalance: 80,
+      quotaReality: 76,
+      pmfStrength: 90,
+    },
+  },
+  figma: {
+    categories: ["established"],
+    salesMotion: "enterprise",
+    compModel: "booking",
+    benchmarks: {
+      gtmMomentum: 84,
+      fundingVelocity: 82,
+      regionalBalance: 82,
+      quotaReality: 74,
+      pmfStrength: 94,
+    },
+  },
+  mercury: {
+    categories: ["established"],
+    salesMotion: "smb",
+    compModel: "booking",
+    benchmarks: {
+      gtmMomentum: 76,
+      fundingVelocity: 80,
+      regionalBalance: 70,
+      quotaReality: 72,
+      pmfStrength: 85,
+    },
+  },
+};
+
+type CoreCompanyInput = Omit<
+  Company,
+  | "gravyTrainScore"
+  | "gravyTrainVerdict"
+  | "categories"
+  | "salesMotion"
+  | "compModel"
+  | "benchmarks"
+>;
+
+function buildCoreCompany(input: CoreCompanyInput): Company {
+  const meta = CORE_BENCHMARK_META[input.slug];
+  return withGravyTrain({ ...input, ...meta });
+}
+
+const coreCompanies: Company[] = (
   [
   {
     slug: "datadog",
@@ -982,216 +1101,18 @@ export const companies: Company[] = (
     hiringRoles: ["Mid-Market AE", "SDR", "Partnerships Manager"],
     gtmTeamSize: "120+",
   },
-  ] as Omit<Company, "gravyTrainScore" | "gravyTrainVerdict">[]
-).map(withGravyTrain);
+  ] as CoreCompanyInput[]
+).map(buildCoreCompany);
 
-export const scenarios: Scenario[] = [
-  {
-    id: "1",
-    title: "Sell Datadog Monitoring to a VP of Engineering",
-    description:
-      "You're an AE at Datadog cold calling a VP of Engineering at a Series C fintech company that's scaling fast and experiencing reliability issues.",
-    company: "datadog",
-    targetRole: "VP of Engineering",
-    targetCompany: "A Series C fintech (500 employees)",
-    difficulty: "intermediate",
-    objectives: [
-      "Book a discovery call",
-      "Understand their current observability stack",
-      "Position Datadog as the unified platform",
-    ],
-    talkingPoints: [
-      "Unified monitoring across infrastructure, APM, and logs",
-      "Real-time alerting reduces MTTR by 60%",
-      "800+ integrations with existing tech stack",
-      "SOC 2 and HIPAA compliance built-in for fintech needs",
-    ],
-    objections: [
-      "We already use Prometheus and Grafana — it's free",
-      "We don't have budget for another tool right now",
-      "Our team is too busy to migrate monitoring systems",
-      "We've looked at Datadog before, it's too expensive",
-    ],
-    successCriteria: [
-      "Successfully identify 2–3 pain points",
-      "Handle at least one objection effectively",
-      "Secure agreement for a follow-up meeting",
-      "Keep the call under 5 minutes",
-    ],
-  },
-  {
-    id: "2",
-    title: "Sell Gong to a CRO at a Mid-Market SaaS",
-    description:
-      "You're an Enterprise AE at Gong reaching out to a CRO whose sales team is missing quota and struggling with pipeline visibility.",
-    company: "gong",
-    targetRole: "Chief Revenue Officer",
-    targetCompany: "A mid-market SaaS company (300 employees)",
-    difficulty: "advanced",
-    objectives: [
-      "Connect pipeline visibility to revenue impact",
-      "Demonstrate how Gong surfaces deal risk",
-      "Position against Chorus/Clari alternatives",
-    ],
-    talkingPoints: [
-      "AI-powered deal intelligence identifies at-risk deals early",
-      "Coaching insights help ramp new reps 40% faster",
-      "Forecasting accuracy improves by 20%+ with Gong",
-      "Integration with Salesforce for seamless workflow",
-    ],
-    objections: [
-      "We already use Chorus and it's good enough",
-      "Our reps don't want to be recorded",
-      "We need to focus on hiring, not tools right now",
-      "How is this different from what Salesforce already offers?",
-    ],
-    successCriteria: [
-      "Tie revenue impact to specific pain points",
-      "Differentiate from competitors with concrete examples",
-      "Get commitment for a pilot or POC",
-      "Build champion relationship with the CRO",
-    ],
-  },
-  {
-    id: "3",
-    title: "Sell Rippling to a Head of People at a Startup",
-    description:
-      "You're an SMB AE at Rippling cold calling a Head of People at a 100-person startup that's using Gusto and struggling to manage IT and HR in separate systems.",
-    company: "rippling",
-    targetRole: "Head of People",
-    targetCompany: "A seed-stage startup (100 employees)",
-    difficulty: "beginner",
-    objectives: [
-      "Identify pain with fragmented HR/IT tooling",
-      "Show how Rippling unifies the employee lifecycle",
-      "Position the cost savings of consolidation",
-    ],
-    talkingPoints: [
-      "One system for HR, IT, and Finance — no more tool sprawl",
-      "Automate onboarding: laptop, apps, payroll in 90 seconds",
-      "Save 20+ hours/month on manual admin work",
-      "Custom workflows and policies without engineering help",
-    ],
-    objections: [
-      "Gusto works fine for our size",
-      "We can't afford to switch systems during a hiring freeze",
-      "Our IT person handles device management manually, it's fine",
-      "We're too small to need something this complex",
-    ],
-    successCriteria: [
-      "Identify at least 2 pain points with current tooling",
-      "Quantify time/cost savings clearly",
-      "Handle the 'we're too small' objection",
-      "Book a demo with the decision maker",
-    ],
-  },
-  {
-    id: "4",
-    title: "Sell Clay to a VP of Sales at a Growth-Stage Company",
-    description:
-      "You're an AE at Clay reaching out to a VP of Sales who's frustrated with the quality of outbound leads and low reply rates from their SDR team.",
-    company: "clay",
-    targetRole: "VP of Sales",
-    targetCompany: "A Series B SaaS company (200 employees)",
-    difficulty: "intermediate",
-    objectives: [
-      "Diagnose the root cause of low outbound conversion",
-      "Show how data enrichment improves targeting",
-      "Demonstrate Clay's workflow automation capabilities",
-    ],
-    talkingPoints: [
-      "Enrich leads from 75+ data sources in one workflow",
-      "AI-powered personalization at scale — not just mail merge",
-      "Customers see 3–5x improvement in reply rates",
-      "Replaces manual research and multiple point solutions",
-    ],
-    objections: [
-      "We already use ZoomInfo for data",
-      "Our SDRs can do manual research — that's their job",
-      "We've tried enrichment tools before, data quality was bad",
-      "How do I know this will actually improve reply rates?",
-    ],
-    successCriteria: [
-      "Connect data quality to pipeline and revenue metrics",
-      "Position Clay as a platform, not just a data vendor",
-      "Handle the 'we already use ZoomInfo' objection",
-      "Secure a pilot or trial commitment",
-    ],
-  },
-  {
-    id: "5",
-    title: "Sell Vanta to a CTO at a Health-Tech Startup",
-    description:
-      "You're a Mid-Market AE at Vanta cold calling a CTO at a health-tech startup that needs HIPAA compliance to close enterprise deals but hasn't started the process.",
-    company: "vanta",
-    targetRole: "CTO",
-    targetCompany: "A Series A health-tech startup (50 employees)",
-    difficulty: "beginner",
-    objectives: [
-      "Create urgency around compliance as a sales enabler",
-      "Show how Vanta automates the audit process",
-      "Position compliance as a competitive advantage",
-    ],
-    talkingPoints: [
-      "Get HIPAA compliant in weeks, not months",
-      "Automated evidence collection saves 90% of audit prep time",
-      "Compliance as a trust signal closes enterprise deals faster",
-      "Continuous monitoring — not just point-in-time audits",
-    ],
-    objections: [
-      "We'll deal with compliance when we're bigger",
-      "Can't our lawyers and a consultant handle this?",
-      "HIPAA compliance seems too expensive for our stage",
-      "We're not losing deals because of compliance — yet",
-    ],
-    successCriteria: [
-      "Create urgency by tying compliance to revenue opportunity",
-      "Quantify the cost of manual compliance vs. Vanta",
-      "Handle the 'we'll do it later' objection",
-      "Get a follow-up scheduled with the CEO or COO",
-    ],
-  },
-  {
-    id: "6",
-    title: "Sell Figma to a Design Director at an Enterprise",
-    description:
-      "You're an Enterprise AE at Figma approaching a Design Director at a Fortune 500 company still using Adobe XD and Sketch across different teams with no unified design system.",
-    company: "figma",
-    targetRole: "Design Director",
-    targetCompany: "A Fortune 500 retail company (10,000+ employees)",
-    difficulty: "advanced",
-    objectives: [
-      "Highlight the cost of fragmented design tools",
-      "Show how Figma enables real-time collaboration at scale",
-      "Build a business case for standardization",
-    ],
-    talkingPoints: [
-      "Real-time multiplayer editing eliminates version control chaos",
-      "Design systems in Figma ensure brand consistency across teams",
-      "Browser-based — no downloads, instant access for stakeholders",
-      "FigJam for workshops and brainstorming with cross-functional teams",
-    ],
-    objections: [
-      "We have Adobe Creative Cloud enterprise licenses already",
-      "Switching 200 designers is a massive change management project",
-      "Security team needs to review browser-based tools",
-      "We just invested in a design system in Sketch — can't switch now",
-    ],
-    successCriteria: [
-      "Quantify productivity gains from real-time collaboration",
-      "Address security and enterprise compliance concerns",
-      "Propose a phased rollout plan starting with one team",
-      "Identify an internal champion to drive adoption",
-    ],
-  },
-];
+const coreSlugs = new Set(coreCompanies.map((c) => c.slug));
+const seedCompanies = [...forbesAi50Seeds, ...hyperscalerSeeds]
+  .map(seedToCompany)
+  .filter((c) => !coreSlugs.has(c.slug));
+
+export const companies: Company[] = [...coreCompanies, ...seedCompanies];
 
 export function getCompanyBySlug(slug: string): Company | undefined {
   return companies.find((c) => c.slug === slug);
-}
-
-export function getScenariosByCompany(companySlug: string): Scenario[] {
-  return scenarios.filter((s) => s.company === companySlug);
 }
 
 export function getResearchForCompany(company: Company): CompanyResearch {

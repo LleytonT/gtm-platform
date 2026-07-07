@@ -50,6 +50,16 @@ export function CompanyCard({
 
           <div className="mt-3 flex flex-wrap gap-2">
             <GravyTrainBadgeCompact verdict={company.gravyTrainVerdict} />
+            {company.categories.includes("forbes_ai50") && (
+              <Badge variant="outline" className="text-[10px]">
+                AI 50
+              </Badge>
+            )}
+            {company.categories.includes("hyperscaler") && (
+              <Badge variant="outline" className="text-[10px]">
+                Hyperscaler
+              </Badge>
+            )}
           </div>
 
           <div className="mt-3">

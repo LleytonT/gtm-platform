@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="hairline-b border-t bg-card/60">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-3">
           <div>
             <Link href="/" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center border border-brief bg-brief text-primary-foreground">
@@ -14,55 +14,52 @@ export function Footer() {
               <span className="font-display text-lg font-semibold">GTM Hire</span>
             </Link>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Find companies where the product sells itself. Score the Three
-              T&apos;s and join the gravy train.
+              Quantitative benchmarks for GTM professionals finding their next
+              company. Forbes AI 50, hyperscalers, and established SaaS —
+              scored on signals that matter.
             </p>
           </div>
           <div>
             <h2 className="font-mono-data mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Platform
+              Benchmarks
             </h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                <Link href="/" className="hover:text-foreground">
+                  Live rankings
+                </Link>
+              </li>
               <li>
                 <Link href="/companies" className="hover:text-foreground">
-                  Gravy train finder
+                  Company directory
                 </Link>
               </li>
               <li>
-                <Link href="/outreach" className="hover:text-foreground">
-                  Outreach builder
+                <Link href="/companies?category=forbes_ai50" className="hover:text-foreground">
+                  Forbes AI 50
                 </Link>
               </li>
               <li>
-                <Link href="/scenarios" className="hover:text-foreground">
-                  Scenario plays
+                <Link href="/companies?category=hyperscaler" className="hover:text-foreground">
+                  Hyperscalers
                 </Link>
               </li>
             </ul>
           </div>
           <div>
             <h2 className="font-mono-data mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Resources
+              Data sources
             </h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>GTM career guide</li>
-              <li>Salary benchmarks</li>
-              <li>Interview prep</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="font-mono-data mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Company
-            </h2>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>About</li>
-              <li>Blog</li>
-              <li>Contact</li>
+              <li>Forbes AI 50 (2025)</li>
+              <li>LinkedIn GTM signals</li>
+              <li>Funding & press events</li>
+              <li>RepVue quota proxies</li>
             </ul>
           </div>
         </div>
         <div className="mt-8 hairline-b border-t pt-8 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} GTM Hire
+          &copy; {new Date().getFullYear()} GTM Hire · Benchmark data is illustrative for diligence purposes
         </div>
       </div>
     </footer>

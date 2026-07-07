@@ -26,9 +26,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GTM Hire — Find Companies Where the Product Sells Itself",
+  title: "GTM Hire — Benchmarks for Your Next Sales Role",
   description:
-    "Join the gravy train. We score companies on Timing, Territory, and Talent — surfacing the qualitative signals that tell you where the product sells itself.",
+    "Quantitative GTM benchmarks for tech sales professionals. Compare gravy train scores, GTM momentum, funding velocity, and quota reality across Forbes AI 50, hyperscalers, and SaaS.",
 };
 
 export default function RootLayout({
