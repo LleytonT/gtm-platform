@@ -1,6 +1,43 @@
-import { NotableActivity } from "./types";
+import { SourceRecord } from "./provenance";
+import { ThreeTKey } from "./types";
 
-export const notableActivities: NotableActivity[] = [
+export type CuratedEventType =
+  | "funding"
+  | "hiring"
+  | "expansion"
+  | "leadership"
+  | "product"
+  | "contraction";
+
+/**
+ * Manually curated company events. Each event carries a source record and is
+ * clearly dated. Negative events within the last 12 months apply a scoring
+ * penalty to the dimensions they feed (see /methodology for the exact rule).
+ */
+export interface CuratedEvent {
+  id: string;
+  date: string;
+  companySlug: string;
+  companyName: string;
+  type: CuratedEventType;
+  headline: string;
+  detail: string;
+  impact: "positive" | "neutral" | "negative";
+  feedsThreeT: ThreeTKey[];
+  source: SourceRecord;
+}
+
+function pressSource(query: string, retrievedAt: string): SourceRecord {
+  return {
+    source_name: "Press coverage (curated)",
+    url: `https://news.google.com/search?q=${encodeURIComponent(query)}`,
+    retrieved_at: retrievedAt,
+    confidence: "medium",
+    method: "manual",
+  };
+}
+
+const curatedEvents: CuratedEvent[] = [
   {
     id: "vercel-series-g",
     date: "2025-09-15",
@@ -12,6 +49,7 @@ export const notableActivities: NotableActivity[] = [
       "Front-end cloud leader doubles down on AI SDK and v0 — signals aggressive GTM expansion in enterprise developer tools.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    source: pressSource("Vercel Series G funding", "2025-09-16T00:00:00.000Z"),
   },
   {
     id: "cursor-series-c",
@@ -24,6 +62,7 @@ export const notableActivities: NotableActivity[] = [
       "AI coding tool hits $500M+ ARR — one of the fastest GTM ramps in enterprise software history.",
     impact: "positive",
     feedsThreeT: ["timing", "talent"],
+    source: pressSource("Cursor Anysphere $900M funding", "2025-06-06T00:00:00.000Z"),
   },
   {
     id: "openai-series-f",
@@ -36,6 +75,7 @@ export const notableActivities: NotableActivity[] = [
       "Largest private funding round ever — enterprise sales org scaling to capture ChatGPT Enterprise demand globally.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    source: pressSource("OpenAI $40B funding round", "2025-04-01T00:00:00.000Z"),
   },
   {
     id: "anthropic-series-e",
@@ -48,6 +88,7 @@ export const notableActivities: NotableActivity[] = [
       "Claude enterprise adoption accelerating — new VP Sales hires across AMER and EMEA.",
     impact: "positive",
     feedsThreeT: ["timing", "talent"],
+    source: pressSource("Anthropic Series E $3.5B", "2025-03-04T00:00:00.000Z"),
   },
   {
     id: "databricks-series-i",
@@ -55,11 +96,12 @@ export const notableActivities: NotableActivity[] = [
     companySlug: "databricks",
     companyName: "Databricks",
     type: "funding",
-    headline: "Databricks raises $10B Series I at $62B valuation",
+    headline: "Databricks raises $10B Series J at $62B valuation",
     detail:
       "Data + AI platform crossing $3B ARR — consumption model driving massive expansion revenue for AEs.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    source: pressSource("Databricks $10B funding", "2024-12-18T00:00:00.000Z"),
   },
   {
     id: "harvey-series-c",
@@ -72,6 +114,7 @@ export const notableActivities: NotableActivity[] = [
       "Legal AI expanding from BigLaw to mid-market — new enterprise AE pods in NYC and London.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    source: pressSource("Harvey AI Series C $300M", "2025-02-13T00:00:00.000Z"),
   },
   {
     id: "sierra-series-b",
@@ -84,6 +127,7 @@ export const notableActivities: NotableActivity[] = [
       "Bret Taylor's AI customer service startup — enterprise GTM led by ex-Salesforce leaders.",
     impact: "positive",
     feedsThreeT: ["timing", "talent"],
+    source: pressSource("Sierra AI $175M funding", "2025-01-29T00:00:00.000Z"),
   },
   {
     id: "gong-apac-contraction",
@@ -96,6 +140,7 @@ export const notableActivities: NotableActivity[] = [
       "AMER team still growing while APAC sees layoffs — regional imbalance signal for territory diligence.",
     impact: "negative",
     feedsThreeT: ["territory"],
+    source: pressSource("Gong APAC layoffs 2025", "2025-08-21T00:00:00.000Z"),
   },
   {
     id: "scale-ai-meta-deal",
@@ -108,6 +153,7 @@ export const notableActivities: NotableActivity[] = [
       "Major strategic shift — Scale's independent GTM trajectory now tied to Meta's AI infrastructure bets.",
     impact: "neutral",
     feedsThreeT: ["timing", "talent"],
+    source: pressSource("Meta Scale AI investment", "2025-06-13T00:00:00.000Z"),
   },
   {
     id: "mistral-series-c",
@@ -120,6 +166,7 @@ export const notableActivities: NotableActivity[] = [
       "European AI champion building enterprise sales motion — new offices in London and NYC.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    source: pressSource("Mistral AI €600M funding", "2025-06-25T00:00:00.000Z"),
   },
   {
     id: "rippling-series-f",
@@ -132,6 +179,7 @@ export const notableActivities: NotableActivity[] = [
       "HR + IT platform adding 200+ GTM hires — platform consolidation play gaining enterprise traction.",
     impact: "positive",
     feedsThreeT: ["timing", "territory", "talent"],
+    source: pressSource("Rippling Series G $16.8B", "2025-04-23T00:00:00.000Z"),
   },
   {
     id: "aws-enterprise-hiring",
@@ -144,9 +192,14 @@ export const notableActivities: NotableActivity[] = [
       "Hyperscaler doubling down on AI workload migrations — greenfield territory for cloud infrastructure sellers.",
     impact: "positive",
     feedsThreeT: ["territory", "talent"],
+    source: pressSource("AWS enterprise sales hiring 2025", "2025-10-02T00:00:00.000Z"),
   },
 ];
 
-export function getActivitiesForCompany(slug: string): NotableActivity[] {
-  return notableActivities.filter((a) => a.companySlug === slug);
+export function getCuratedEvents(): CuratedEvent[] {
+  return curatedEvents;
+}
+
+export function getEventsForCompany(slug: string): CuratedEvent[] {
+  return curatedEvents.filter((e) => e.companySlug === slug);
 }

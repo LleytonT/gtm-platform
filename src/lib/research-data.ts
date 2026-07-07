@@ -7,10 +7,10 @@ import { DEFAULT_CHECKLISTS } from "./research-playbook";
  */
 export const enrichedResearch: Record<string, CompanyResearch> = {
   clay: {
-    diligenceScore: 91,
+    diligenceScore: null,
     lenses: {
       people_intel: {
-        score: 92,
+        score: null,
         headline: "Reps consistently report the product sells itself",
         findings: [
           {
@@ -35,7 +35,7 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
         checklist: DEFAULT_CHECKLISTS.people_intel,
       },
       review_sites: {
-        score: 88,
+        score: null,
         headline: "RepVue: 74% quota attainment — top quartile for Series B",
         findings: [
           {
@@ -64,7 +64,7 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
         ],
       },
       team_linkedin: {
-        score: 90,
+        score: null,
         headline: "Strong pedigrees, low churn, alumni promote internally",
         findings: [
           {
@@ -101,7 +101,7 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
         ],
       },
       media_competition: {
-        score: 94,
+        score: null,
         headline: "Series B at 300% growth — category darling, not challenger",
         findings: [
           {
@@ -132,7 +132,7 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
         ],
       },
       industry_growth: {
-        score: 96,
+        score: null,
         headline: "Sales intelligence market growing 22% CAGR — outbound AI is the wedge",
         findings: [
           {
@@ -159,10 +159,10 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
     },
   },
   rippling: {
-    diligenceScore: 89,
+    diligenceScore: null,
     lenses: {
       people_intel: {
-        score: 86,
+        score: null,
         headline: "Mixed signals — high growth but 'startup chaos' reports",
         findings: [
           {
@@ -187,7 +187,7 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
         checklist: DEFAULT_CHECKLISTS.people_intel,
       },
       review_sites: {
-        score: 82,
+        score: null,
         headline: "RepVue: 65% attainment — acceptable given hypergrowth",
         findings: [
           {
@@ -215,7 +215,7 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
         ],
       },
       team_linkedin: {
-        score: 91,
+        score: null,
         headline: "A-player pedigrees, aggressive hiring across segments",
         findings: [
           {
@@ -246,7 +246,7 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
         checklist: DEFAULT_CHECKLISTS.team_linkedin,
       },
       media_competition: {
-        score: 95,
+        score: null,
         headline: "Series F at $11.25B — one of the hottest private companies in SaaS",
         findings: [
           {
@@ -271,7 +271,7 @@ export const enrichedResearch: Record<string, CompanyResearch> = {
         checklist: DEFAULT_CHECKLISTS.media_competition,
       },
       industry_growth: {
-        score: 90,
+        score: null,
         headline: "HCM market growing 12% CAGR — consolidation trend favors Rippling",
         findings: [
           {

@@ -1,9 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { GravyTrainBadgeCompact } from "@/components/gravy-train-badge";
+import {
+  GravyTrainBadgeCompact,
+} from "@/components/gravy-train-badge";
 import { ThreeTsOverview } from "@/components/three-ts-overview";
-import { ResearchPlaybookSummary } from "@/components/research-playbook";
+import { LastUpdated } from "@/components/provenance";
+import { useScoreSettings } from "@/components/score-settings";
+import { computeWeightedScore } from "@/lib/scoring";
 import {
   DollarSign,
   TrendingUp,
@@ -12,14 +18,41 @@ import {
   Train,
 } from "lucide-react";
 import { Company, CompanyResearch } from "@/lib/types";
+import { CompanyScorecard } from "@/lib/scoring";
+
+export function AnzExpansionBadge({ compact }: { compact?: boolean }) {
+  return (
+    <Badge
+      variant="outline"
+      className={
+        compact
+          ? "border-sky-300 bg-sky-50 text-[10px] text-sky-800"
+          : "border-sky-300 bg-sky-50 text-xs text-sky-800"
+      }
+    >
+      <MapPin className="mr-1 h-3 w-3" aria-hidden />
+      Expanding into ANZ
+    </Badge>
+  );
+}
 
 export function CompanyCard({
   company,
+  scorecard,
   research,
+  anzExpanding,
 }: {
   company: Company;
+  scorecard: CompanyScorecard;
   research: CompanyResearch;
+  anzExpanding: boolean;
 }) {
+  const { effectiveWeights } = useScoreSettings();
+  const { value } = computeWeightedScore(scorecard, effectiveWeights);
+  const lensCount = Object.values(research.lenses).filter(
+    (lens) => lens.score !== null
+  ).length;
+
   return (
     <Link href={`/companies/${company.slug}`} className="group block h-full">
       <Card className="h-full border border-rule bg-card shadow-none transition-colors hover:border-brief/30 hover:bg-card/90">
@@ -40,7 +73,7 @@ export function CompanyCard({
             </div>
             <div className="font-mono-data flex items-center gap-1 border border-gravy/30 bg-gravy/10 px-2.5 py-1 text-xs font-semibold text-brief">
               <Train className="h-3 w-3 text-gravy" aria-hidden />
-              {company.gravyTrainScore}
+              {value ?? "—"}
             </div>
           </div>
 
@@ -49,7 +82,8 @@ export function CompanyCard({
           </p>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            <GravyTrainBadgeCompact verdict={company.gravyTrainVerdict} />
+            <GravyTrainBadgeCompact scorecard={scorecard} />
+            {anzExpanding && <AnzExpansionBadge compact />}
             {company.categories.includes("forbes_ai50") && (
               <Badge variant="outline" className="text-[10px]">
                 AI 50
@@ -62,12 +96,12 @@ export function CompanyCard({
             )}
           </div>
 
-          <div className="mt-3">
-            <ResearchPlaybookSummary research={research} />
-          </div>
-
           <div className="mt-4 border-t border-rule pt-4">
-            <ThreeTsOverview threeTs={company.threeTs} size="sm" />
+            <ThreeTsOverview
+              threeTs={company.threeTs}
+              scorecard={scorecard}
+              size="sm"
+            />
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2 border-t border-rule pt-4 text-xs text-muted-foreground">
@@ -83,12 +117,6 @@ export function CompanyCard({
               <Users className="h-3 w-3" aria-hidden />
               {company.gtmTeamSize} GTM
             </span>
-            {company.expandingRegions && company.expandingRegions.length > 0 && (
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="h-3 w-3" aria-hidden />
-                {company.expandingRegions.slice(0, 2).join(", ")}
-              </span>
-            )}
           </div>
 
           <div className="mt-3 flex flex-wrap gap-1">
@@ -101,6 +129,15 @@ export function CompanyCard({
               <Badge variant="secondary" className="text-[10px]">
                 +{company.hiringRoles.length - 3}
               </Badge>
+            )}
+          </div>
+
+          <div className="mt-3 flex items-center justify-between border-t border-rule pt-3">
+            <LastUpdated iso={scorecard.lastUpdated} />
+            {lensCount > 0 && (
+              <span className="text-[10px] text-muted-foreground">
+                {lensCount}/5 research lenses sourced
+              </span>
             )}
           </div>
         </CardContent>

@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
-import { getScoreColor, getScoreLabel } from "@/lib/data";
+import { getScoreColor, getScoreLabel } from "@/lib/scoring";
 
 interface ScoreRingProps {
-  score: number;
+  /** null ⇒ insufficient data (no sourced inputs). */
+  score: number | null;
   label: string;
   size?: "sm" | "md" | "lg";
 }
@@ -12,7 +13,8 @@ export function ScoreRing({ score, label, size = "md" }: ScoreRingProps) {
   const stroke = size === "lg" ? 8 : size === "md" ? 6 : 4;
   const normalizedRadius = radius - stroke / 2;
   const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
+  const strokeDashoffset =
+    circumference - ((score ?? 0) / 100) * circumference;
   const viewBox = `0 0 ${radius * 2} ${radius * 2}`;
 
   return (
@@ -28,23 +30,25 @@ export function ScoreRing({ score, label, size = "md" }: ScoreRingProps) {
             cx={radius}
             cy={radius}
           />
-          <circle
-            stroke="currentColor"
-            className={cn(getScoreColor(score))}
-            fill="transparent"
-            strokeWidth={stroke}
-            strokeLinecap="round"
-            strokeDasharray={`${circumference} ${circumference}`}
-            strokeDashoffset={strokeDashoffset}
-            r={normalizedRadius}
-            cx={radius}
-            cy={radius}
-            style={{
-              transform: "rotate(-90deg)",
-              transformOrigin: "50% 50%",
-              transition: "stroke-dashoffset 0.5s ease",
-            }}
-          />
+          {score !== null && (
+            <circle
+              stroke="currentColor"
+              className={cn(getScoreColor(score))}
+              fill="transparent"
+              strokeWidth={stroke}
+              strokeLinecap="round"
+              strokeDasharray={`${circumference} ${circumference}`}
+              strokeDashoffset={strokeDashoffset}
+              r={normalizedRadius}
+              cx={radius}
+              cy={radius}
+              style={{
+                transform: "rotate(-90deg)",
+                transformOrigin: "50% 50%",
+                transition: "stroke-dashoffset 0.5s ease",
+              }}
+            />
+          )}
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
@@ -58,17 +62,16 @@ export function ScoreRing({ score, label, size = "md" }: ScoreRingProps) {
               getScoreColor(score)
             )}
           >
-            {score}
+            {score ?? "—"}
           </span>
         </div>
       </div>
-      <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      <span
-        className={cn(
-          "text-[10px] font-semibold",
-          getScoreColor(score)
-        )}
-      >
+      {label && (
+        <span className="text-xs font-medium text-muted-foreground">
+          {label}
+        </span>
+      )}
+      <span className={cn("text-[10px] font-semibold", getScoreColor(score))}>
         {getScoreLabel(score)}
       </span>
     </div>

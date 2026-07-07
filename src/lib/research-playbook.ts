@@ -119,8 +119,20 @@ export const DEFAULT_CHECKLISTS: Record<ResearchLensId, string[]> = {
   ],
 };
 
-function avg(nums: number[]): number {
-  return Math.round(nums.reduce((a, b) => a + b, 0) / nums.length);
+/**
+ * Diligence score = average of lens scores that have sourced data behind
+ * them (RepVue, licensed people data). Lenses without sourced data have a
+ * null score and are excluded; when no lens is sourced the diligence score
+ * itself is null and the UI renders "insufficient data".
+ */
+export function computeDiligenceScore(
+  lenses: CompanyResearch["lenses"]
+): number | null {
+  const scores = Object.values(lenses)
+    .map((l) => l.score)
+    .filter((s): s is number => s !== null);
+  if (scores.length === 0) return null;
+  return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
 }
 
 function signalToFinding(
@@ -134,7 +146,7 @@ function signalToFinding(
 
 function buildLens(
   id: ResearchLensId,
-  score: number,
+  score: number | null,
   headline: string,
   findings: ResearchFinding[],
   resources?: ResearchLensData["resources"]
@@ -148,7 +160,11 @@ function buildLens(
   };
 }
 
-/** Build a research playbook from existing company data when no manual override exists. */
+/**
+ * Build a research playbook scaffold from curated company data.
+ * Lens scores start as null (insufficient data) — numeric lens scores are
+ * only added when sourced data (RepVue, licensed people data) is merged in.
+ */
 export function buildResearchFromCompany(company: Company): CompanyResearch {
   const { threeTs, pmf, financials, packages } = company;
 
@@ -168,23 +184,17 @@ export function buildResearchFromCompany(company: Company): CompanyResearch {
 
   const reviewFindings: ResearchFinding[] = [
     signalToFinding(
-      `Reported quota attainment: ${packages.quotaAttainment}`,
-      "medium",
-      ["talent"],
-      parseInt(packages.quotaAttainment) >= 70 ? "positive" : "neutral"
-    ),
-    signalToFinding(
-      `OTE range: ${packages.ote} (base ${packages.baseSalary})`,
+      `Curated OTE range: ${packages.ote} (base ${packages.baseSalary}) — verify on RepVue and community submissions`,
       "medium",
       ["talent"],
       "neutral"
     ),
   ];
 
-  const linkedinFindings: ResearchFinding[] = [
-    ...threeTs.territory.signals.filter((s) => s.source === "linkedin"),
-    ...threeTs.talent.signals.filter((s) => s.source === "linkedin"),
-    ...threeTs.timing.signals.filter((s) => s.source === "linkedin"),
+  const peopleDataFindings: ResearchFinding[] = [
+    ...threeTs.territory.signals.filter((s) => s.source === "people_data"),
+    ...threeTs.talent.signals.filter((s) => s.source === "people_data"),
+    ...threeTs.timing.signals.filter((s) => s.source === "people_data"),
   ].map((s) =>
     signalToFinding(s.text, s.confidence, ["territory", "talent"])
   );
@@ -220,7 +230,7 @@ export function buildResearchFromCompany(company: Company): CompanyResearch {
   const lenses = {
     people_intel: buildLens(
       "people_intel",
-      threeTs.talent.score,
+      null,
       peopleFindings.length > 0
         ? "Community intel available — verify with your own calls"
         : "No people intel yet — start here",
@@ -228,8 +238,8 @@ export function buildResearchFromCompany(company: Company): CompanyResearch {
     ),
     review_sites: buildLens(
       "review_sites",
-      packages.score,
-      `Comp data sourced — validate on RepVue & Glassdoor`,
+      null,
+      `No verified review-site data yet — validate on RepVue & Glassdoor`,
       reviewFindings,
       [
         {
@@ -244,22 +254,22 @@ export function buildResearchFromCompany(company: Company): CompanyResearch {
     ),
     team_linkedin: buildLens(
       "team_linkedin",
-      avg([threeTs.territory.score, threeTs.talent.score]),
-      linkedinFindings.length > 0
-        ? "LinkedIn signals detected on hiring & team movement"
-        : "Run a manual LinkedIn sweep on your target team",
-      linkedinFindings,
+      null,
+      peopleDataFindings.length > 0
+        ? "Curated team signals — licensed people-data sync pending"
+        : "No licensed people-data coverage yet — run your own team sweep",
+      peopleDataFindings,
       [
         {
-          label: "Search GTM team on LinkedIn",
+          label: "Search GTM team on LinkedIn (manual)",
           url: `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(company.name + " account executive")}`,
         },
       ]
     ),
     media_competition: buildLens(
       "media_competition",
-      avg([threeTs.timing.score, financials.score]),
-      `${financials.growthRate} growth — check recent press for confirmation`,
+      null,
+      `${financials.growthRate} growth (curated) — check recent press for confirmation`,
       mediaFindings,
       [
         {
@@ -270,20 +280,17 @@ export function buildResearchFromCompany(company: Company): CompanyResearch {
     ),
     industry_growth: buildLens(
       "industry_growth",
-      pmf.score,
+      null,
       pmf.marketGrowth,
       industryFindings
     ),
   };
 
-  const diligenceScore = avg(
-    Object.values(lenses).map((l) => l.score)
-  );
-
-  return { lenses, diligenceScore };
+  return { lenses, diligenceScore: computeDiligenceScore(lenses) };
 }
 
-export function getLensScoreColor(score: number): string {
+export function getLensScoreColor(score: number | null): string {
+  if (score === null) return "text-muted-foreground";
   if (score >= 85) return "text-emerald-600";
   if (score >= 70) return "text-blue-600";
   if (score >= 55) return "text-amber-600";

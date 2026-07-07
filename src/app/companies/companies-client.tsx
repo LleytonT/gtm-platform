@@ -15,8 +15,10 @@ import { Badge } from "@/components/ui/badge";
 import { CompanyCard } from "@/components/company-card";
 import { SignalSourceLegend } from "@/components/qualitative-signals";
 import { SectionHeader } from "@/components/section-header";
+import { RoleLensTabs, WeightControls, useScoreSettings } from "@/components/score-settings";
 import { THREE_T_META } from "@/lib/three-ts";
 import { Company, CompanyResearch } from "@/lib/types";
+import { CompanyScorecard, computeWeightedScore } from "@/lib/scoring";
 import { Search, SlidersHorizontal, Train } from "lucide-react";
 
 type SortOption =
@@ -27,14 +29,26 @@ type SortOption =
   | "growth"
   | "gtm_momentum"
   | "funding_velocity"
-  | "quota_reality";
+  | "quota_reality"
+  | "regional_balance"
+  | "pmf_strength";
 
 type CategoryFilter = "all" | "forbes_ai50" | "hyperscaler" | "established";
 
 export type CompanyListItem = {
   company: Company;
+  scorecard: CompanyScorecard;
   research: CompanyResearch;
+  anzExpanding: boolean;
 };
+
+/** Sort helper: null (insufficient data) always sorts last. */
+function byDesc(a: number | null, b: number | null): number {
+  if (a === null && b === null) return 0;
+  if (a === null) return 1;
+  if (b === null) return -1;
+  return b - a;
+}
 
 export default function CompaniesClient({
   items,
@@ -48,6 +62,7 @@ export default function CompaniesClient({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { effectiveWeights } = useScoreSettings();
 
   const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [industryFilter, setIndustryFilter] = useState(
@@ -62,6 +77,9 @@ export default function CompaniesClient({
   const [gravyTrainOnly, setGravyTrainOnly] = useState(
     () => searchParams.get("gravy") === "1"
   );
+  const [anzOnly, setAnzOnly] = useState(
+    () => searchParams.get("anz") === "1"
+  );
   const [sortBy, setSortBy] = useState<SortOption>(
     () => (searchParams.get("sort") as SortOption) ?? "gravyTrain"
   );
@@ -72,6 +90,7 @@ export default function CompaniesClient({
       industry?: string;
       region?: string;
       gravy?: boolean;
+      anz?: boolean;
       sort?: string;
       category?: string;
     }) => {
@@ -95,6 +114,10 @@ export default function CompaniesClient({
       if ("gravy" in updates) {
         if (updates.gravy) params.set("gravy", "1");
         else params.delete("gravy");
+      }
+      if ("anz" in updates) {
+        if (updates.anz) params.set("anz", "1");
+        else params.delete("anz");
       }
       if ("sort" in updates) {
         if (updates.sort && updates.sort !== "gravyTrain")
@@ -150,45 +173,95 @@ export default function CompaniesClient({
       );
     }
 
+    if (anzOnly) {
+      result = result.filter((item) => item.anzExpanding);
+    }
+
+    const weighted = new Map(
+      result.map((item) => [
+        item.company.slug,
+        computeWeightedScore(item.scorecard, effectiveWeights).value,
+      ])
+    );
+
     if (gravyTrainOnly) {
-      result = result.filter(({ company: c }) => c.gravyTrainScore >= 90);
+      result = result.filter((item) => {
+        const v = weighted.get(item.company.slug) ?? null;
+        return v !== null && v >= 75;
+      });
     }
 
     result.sort((a, b) => {
+      const sa = a.scorecard;
+      const sb = b.scorecard;
       switch (sortBy) {
         case "timing":
-          return b.company.threeTs.timing.score - a.company.threeTs.timing.score;
+          return byDesc(sa.dimensions.timing.value, sb.dimensions.timing.value);
         case "territory":
-          return (
-            b.company.threeTs.territory.score - a.company.threeTs.territory.score
+          return byDesc(
+            sa.dimensions.territory.value,
+            sb.dimensions.territory.value
           );
         case "talent":
-          return b.company.threeTs.talent.score - a.company.threeTs.talent.score;
+          return byDesc(sa.dimensions.talent.value, sb.dimensions.talent.value);
         case "growth":
           return (
             parseFloat(b.company.financials.growthRate) -
             parseFloat(a.company.financials.growthRate)
           );
         case "gtm_momentum":
-          return b.company.benchmarks.gtmMomentum - a.company.benchmarks.gtmMomentum;
+          return byDesc(
+            sa.benchmarks.gtm_momentum.value,
+            sb.benchmarks.gtm_momentum.value
+          );
         case "funding_velocity":
-          return b.company.benchmarks.fundingVelocity - a.company.benchmarks.fundingVelocity;
+          return byDesc(
+            sa.benchmarks.funding_velocity.value,
+            sb.benchmarks.funding_velocity.value
+          );
         case "quota_reality":
-          return b.company.benchmarks.quotaReality - a.company.benchmarks.quotaReality;
+          return byDesc(
+            sa.benchmarks.quota_reality.value,
+            sb.benchmarks.quota_reality.value
+          );
+        case "regional_balance":
+          return byDesc(
+            sa.benchmarks.regional_balance.value,
+            sb.benchmarks.regional_balance.value
+          );
+        case "pmf_strength":
+          return byDesc(
+            sa.benchmarks.pmf_strength.value,
+            sb.benchmarks.pmf_strength.value
+          );
         default:
-          return b.company.gravyTrainScore - a.company.gravyTrainScore;
+          return byDesc(
+            weighted.get(a.company.slug) ?? null,
+            weighted.get(b.company.slug) ?? null
+          );
       }
     });
 
     return result;
-  }, [items, search, industryFilter, categoryFilter, regionFilter, gravyTrainOnly, sortBy]);
+  }, [
+    items,
+    search,
+    industryFilter,
+    categoryFilter,
+    regionFilter,
+    gravyTrainOnly,
+    anzOnly,
+    sortBy,
+    effectiveWeights,
+  ]);
 
   const hasFilters =
     search ||
     industryFilter !== "all" ||
     categoryFilter !== "all" ||
     regionFilter !== "all" ||
-    gravyTrainOnly;
+    gravyTrainOnly ||
+    anzOnly;
 
   const resultsMessage = hasFilters
     ? `${filtered.length} companies match your filters`
@@ -200,151 +273,175 @@ export default function CompaniesClient({
         align="left"
         eyebrow="Forbes AI 50 · Hyperscalers · SaaS"
         title="Company benchmarks"
-        description="Compare GTM signals across companies — gravy train scores, momentum, funding velocity, and quota reality."
+        description="Compare sourced GTM signals across companies — user-weighted gravy train scores, job-board momentum, funding velocity, and community-verified quota reality."
         className="mb-8"
       />
 
-      <div className="mb-8 flex flex-col gap-4 border border-rule bg-card p-4 sm:flex-row sm:items-center">
-        <div className="relative min-w-0 flex-1">
-          <Label htmlFor="company-search" className="sr-only">
-            Search companies
-          </Label>
-          <Search
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden
-          />
-          <Input
-            id="company-search"
-            name="company-search"
-            type="search"
-            autoComplete="off"
-            spellCheck={false}
-            placeholder="Search companies…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border-rule bg-background pl-9"
-          />
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <Select
-            value={categoryFilter}
-            onValueChange={(v) => {
-              const next = (v ?? "all") as CategoryFilter;
-              setCategoryFilter(next);
-              syncUrl({ category: next });
-            }}
-          >
-            <SelectTrigger
-              id="category-filter"
-              className="w-[160px] border-rule bg-background"
-              aria-label="Filter by category"
+      <div className="mb-6 grid gap-4 lg:grid-cols-[1fr_320px]">
+        <div className="flex flex-col gap-4 border border-rule bg-card p-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="relative min-w-0 flex-1">
+              <Label htmlFor="company-search" className="sr-only">
+                Search companies
+              </Label>
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden
+              />
+              <Input
+                id="company-search"
+                name="company-search"
+                type="search"
+                autoComplete="off"
+                spellCheck={false}
+                placeholder="Search companies…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border-rule bg-background pl-9"
+              />
+            </div>
+            <RoleLensTabs />
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Select
+              value={categoryFilter}
+              onValueChange={(v) => {
+                const next = (v ?? "all") as CategoryFilter;
+                setCategoryFilter(next);
+                syncUrl({ category: next });
+              }}
             >
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All categories</SelectItem>
-              <SelectItem value="forbes_ai50">Forbes AI 50</SelectItem>
-              <SelectItem value="hyperscaler">Hyperscalers</SelectItem>
-              <SelectItem value="established">Established SaaS</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            value={industryFilter}
-            onValueChange={(v) => {
-              const next = v ?? "all";
-              setIndustryFilter(next);
-              syncUrl({ industry: next });
-            }}
-          >
-            <SelectTrigger
-              id="industry-filter"
-              className="w-[180px] border-rule bg-background"
-              aria-label="Filter by industry"
+              <SelectTrigger
+                id="category-filter"
+                className="w-[160px] border-rule bg-background"
+                aria-label="Filter by category"
+              >
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All categories</SelectItem>
+                <SelectItem value="forbes_ai50">Forbes AI 50</SelectItem>
+                <SelectItem value="hyperscaler">Hyperscalers</SelectItem>
+                <SelectItem value="established">Established SaaS</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={industryFilter}
+              onValueChange={(v) => {
+                const next = v ?? "all";
+                setIndustryFilter(next);
+                syncUrl({ industry: next });
+              }}
             >
-              <SlidersHorizontal className="mr-2 h-3 w-3" aria-hidden />
-              <SelectValue placeholder="Industry" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All industries</SelectItem>
-              {industries.map((ind) => (
-                <SelectItem key={ind} value={ind}>
-                  {ind}
+              <SelectTrigger
+                id="industry-filter"
+                className="w-[180px] border-rule bg-background"
+                aria-label="Filter by industry"
+              >
+                <SlidersHorizontal className="mr-2 h-3 w-3" aria-hidden />
+                <SelectValue placeholder="Industry" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All industries</SelectItem>
+                {industries.map((ind) => (
+                  <SelectItem key={ind} value={ind}>
+                    {ind}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={regionFilter}
+              onValueChange={(v) => {
+                const next = v ?? "all";
+                setRegionFilter(next);
+                syncUrl({ region: next });
+              }}
+            >
+              <SelectTrigger
+                id="region-filter"
+                className="w-[160px] border-rule bg-background"
+                aria-label="Filter by region"
+              >
+                <SelectValue placeholder="Region" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All regions</SelectItem>
+                {regions.map((region) => (
+                  <SelectItem key={region} value={region}>
+                    {region}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={sortBy}
+              onValueChange={(v) => {
+                if (!v) return;
+                setSortBy(v as SortOption);
+                syncUrl({ sort: v });
+              }}
+            >
+              <SelectTrigger
+                id="sort-by"
+                className="w-[180px] border-rule bg-background"
+                aria-label="Sort companies"
+              >
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gravyTrain">Gravy train score</SelectItem>
+                <SelectItem value="gtm_momentum">GTM momentum</SelectItem>
+                <SelectItem value="funding_velocity">Funding velocity</SelectItem>
+                <SelectItem value="quota_reality">Quota reality</SelectItem>
+                <SelectItem value="regional_balance">Regional balance</SelectItem>
+                <SelectItem value="pmf_strength">PMF strength</SelectItem>
+                <SelectItem value="timing">
+                  {THREE_T_META.timing.label} (highest weight)
                 </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
-            value={regionFilter}
-            onValueChange={(v) => {
-              const next = v ?? "all";
-              setRegionFilter(next);
-              syncUrl({ region: next });
-            }}
-          >
-            <SelectTrigger
-              id="region-filter"
-              className="w-[160px] border-rule bg-background"
-              aria-label="Filter by region"
-            >
-              <SelectValue placeholder="Region" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All regions</SelectItem>
-              {regions.map((region) => (
-                <SelectItem key={region} value={region}>
-                  {region}
+                <SelectItem value="territory">
+                  {THREE_T_META.territory.label}
                 </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
-            value={sortBy}
-            onValueChange={(v) => {
-              if (!v) return;
-              setSortBy(v as SortOption);
-              syncUrl({ sort: v });
-            }}
-          >
-            <SelectTrigger
-              id="sort-by"
-              className="w-[180px] border-rule bg-background"
-              aria-label="Sort companies"
+                <SelectItem value="talent">{THREE_T_META.talent.label}</SelectItem>
+                <SelectItem value="growth">Growth rate</SelectItem>
+              </SelectContent>
+            </Select>
+            <button
+              type="button"
+              onClick={() => {
+                const next = !gravyTrainOnly;
+                setGravyTrainOnly(next);
+                syncUrl({ gravy: next });
+              }}
+              aria-pressed={gravyTrainOnly}
+              className={`focus-ring inline-flex h-9 items-center gap-2 border px-3 text-sm font-medium transition-colors ${
+                gravyTrainOnly
+                  ? "border-gravy bg-gravy/15 text-brief"
+                  : "border-rule bg-background text-muted-foreground hover:bg-accent"
+              }`}
             >
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="gravyTrain">Gravy train score</SelectItem>
-              <SelectItem value="gtm_momentum">GTM momentum</SelectItem>
-              <SelectItem value="funding_velocity">Funding velocity</SelectItem>
-              <SelectItem value="quota_reality">Quota reality</SelectItem>
-              <SelectItem value="timing">
-                {THREE_T_META.timing.label} (highest weight)
-              </SelectItem>
-              <SelectItem value="territory">
-                {THREE_T_META.territory.label}
-              </SelectItem>
-              <SelectItem value="talent">{THREE_T_META.talent.label}</SelectItem>
-              <SelectItem value="growth">Growth rate</SelectItem>
-            </SelectContent>
-          </Select>
-          <button
-            type="button"
-            onClick={() => {
-              const next = !gravyTrainOnly;
-              setGravyTrainOnly(next);
-              syncUrl({ gravy: next });
-            }}
-            aria-pressed={gravyTrainOnly}
-            className={`focus-ring inline-flex h-9 items-center gap-2 border px-3 text-sm font-medium transition-colors ${
-              gravyTrainOnly
-                ? "border-gravy bg-gravy/15 text-brief"
-                : "border-rule bg-background text-muted-foreground hover:bg-accent"
-            }`}
-          >
-            <Train className="h-3.5 w-3.5" aria-hidden />
-            Gravy train only
-          </button>
+              <Train className="h-3.5 w-3.5" aria-hidden />
+              Gravy train only
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const next = !anzOnly;
+                setAnzOnly(next);
+                syncUrl({ anz: next });
+              }}
+              aria-pressed={anzOnly}
+              className={`focus-ring inline-flex h-9 items-center gap-2 border px-3 text-sm font-medium transition-colors ${
+                anzOnly
+                  ? "border-sky-400 bg-sky-50 text-sky-800"
+                  : "border-rule bg-background text-muted-foreground hover:bg-accent"
+              }`}
+            >
+              Expanding into ANZ
+            </button>
+          </div>
         </div>
+        <WeightControls />
       </div>
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -361,6 +458,7 @@ export default function CompaniesClient({
                 setCategoryFilter("all");
                 setRegionFilter("all");
                 setGravyTrainOnly(false);
+                setAnzOnly(false);
                 setSortBy("gravyTrain");
                 router.replace(pathname, { scroll: false });
               }}
@@ -375,11 +473,13 @@ export default function CompaniesClient({
 
       {filtered.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map(({ company, research }) => (
+          {filtered.map(({ company, scorecard, research, anzExpanding }) => (
             <CompanyCard
               key={company.slug}
               company={company}
+              scorecard={scorecard}
               research={research}
+              anzExpanding={anzExpanding}
             />
           ))}
         </div>

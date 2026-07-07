@@ -1,29 +1,23 @@
-import { Company, CompanyResearch } from "./types";
-import { computeGravyTrainScore, getGravyTrainVerdict } from "./three-ts";
+import { Company, CompanyCategory, CompanyResearch, SalesMotion } from "./types";
 import { buildResearchFromCompany } from "./research-playbook";
 import { getEnrichedResearch } from "./research-data";
 import { getCachedRepvueProfile } from "./scrapers/repvue/cache";
 import { mergeRepvueIntoResearch } from "./scrapers/repvue/merge-research";
 import { getCachedExaSignals } from "./scrapers/exa/cache";
 import { mergeExaIntoResearch } from "./scrapers/exa/merge-research";
-import { seedToCompany } from "./company-factory";
+import { CompanySeed, LegacyBenchmarks, seedToCompany } from "./company-factory";
 import { forbesAi50Seeds, hyperscalerSeeds } from "./company-seeds";
 
-function withGravyTrain(
-  company: Omit<Company, "gravyTrainScore" | "gravyTrainVerdict">
-): Company {
-  const gravyTrainScore = computeGravyTrainScore(company.threeTs);
-  return {
-    ...company,
-    gravyTrainScore,
-    gravyTrainVerdict: getGravyTrainVerdict(gravyTrainScore),
-  };
+interface CoreCompanyMeta {
+  categories: CompanyCategory[];
+  salesMotion: SalesMotion;
+  /** @deprecated rep comp model now comes from human submissions only. */
+  compModel?: string;
+  /** @deprecated hand-set values — ignored (scores come from scorecards). */
+  benchmarks?: LegacyBenchmarks;
 }
 
-const CORE_BENCHMARK_META: Record<
-  string,
-  Pick<Company, "categories" | "salesMotion" | "compModel" | "benchmarks">
-> = {
+const CORE_BENCHMARK_META: Record<string, CoreCompanyMeta> = {
   datadog: {
     categories: ["established"],
     salesMotion: "enterprise",
@@ -122,19 +116,18 @@ const CORE_BENCHMARK_META: Record<
   },
 };
 
-type CoreCompanyInput = Omit<
-  Company,
-  | "gravyTrainScore"
-  | "gravyTrainVerdict"
-  | "categories"
-  | "salesMotion"
-  | "compModel"
-  | "benchmarks"
->;
+type CoreCompanyInput = Omit<CompanySeed, "categories" | "salesMotion"> & {
+  logo: string;
+};
 
 function buildCoreCompany(input: CoreCompanyInput): Company {
   const meta = CORE_BENCHMARK_META[input.slug];
-  return withGravyTrain({ ...input, ...meta });
+  const company = seedToCompany({
+    ...input,
+    categories: meta.categories,
+    salesMotion: meta.salesMotion,
+  });
+  return { ...company, logo: input.logo };
 }
 
 const coreCompanies: Company[] = (
@@ -359,9 +352,9 @@ const coreCompanies: Company[] = (
       marketGrowth: "Conversation intelligence market growing 20% CAGR",
       competitivePosition: "Category leader",
       signals: [
-        "4,000+ customers including LinkedIn, Shopify, Hubspot",
-        "Expanding into forecasting and engagement",
-        "High NPS and customer satisfaction",
+        "4,000+ customers per public company statements",
+        "Public case-study and logo announcements across enterprise segment",
+        "Expanding into forecasting and engagement (public product launches)",
         "Strong word-of-mouth in sales community",
       ],
     },
@@ -1132,23 +1125,3 @@ export function getResearchForCompany(company: Company): CompanyResearch {
   return research;
 }
 
-export function getScoreColor(score: number): string {
-  if (score >= 90) return "text-emerald-600";
-  if (score >= 80) return "text-blue-600";
-  if (score >= 70) return "text-amber-600";
-  return "text-red-600";
-}
-
-export function getScoreBg(score: number): string {
-  if (score >= 90) return "bg-emerald-50 border-emerald-200";
-  if (score >= 80) return "bg-blue-50 border-blue-200";
-  if (score >= 70) return "bg-amber-50 border-amber-200";
-  return "bg-red-50 border-red-200";
-}
-
-export function getScoreLabel(score: number): string {
-  if (score >= 90) return "Excellent";
-  if (score >= 80) return "Strong";
-  if (score >= 70) return "Good";
-  return "Fair";
-}

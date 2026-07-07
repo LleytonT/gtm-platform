@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
-import { getScoreColor } from "@/lib/data";
+import { getScoreColor } from "@/lib/scoring";
 
 export function BenchmarkBarChart({
   items,

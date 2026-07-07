@@ -1,4 +1,5 @@
 import type { Company, CompanyResearch, ResearchFinding } from "@/lib/types";
+import { computeDiligenceScore } from "@/lib/research-playbook";
 import { getRepvueProfileUrl } from "./slugs";
 import {
   formatCompSummary,
@@ -131,25 +132,27 @@ export function mergeRepvueIntoResearch(
   const existing = research.lenses.review_sites;
   const score = scoreFromRepvue(profile);
 
+  const lenses = {
+    ...research.lenses,
+    review_sites: {
+      ...existing,
+      score,
+      headline: buildHeadline(profile),
+      findings: [...findings, ...existing.findings].slice(0, 8),
+      resources: [
+        {
+          label: `${profile.name} on RepVue`,
+          url: getRepvueProfileUrl(profile.repvueSlug),
+        },
+        ...(existing.resources ?? []),
+      ],
+    },
+  };
+
   return {
     ...research,
-    diligenceScore: Math.round((research.diligenceScore + score) / 2),
-    lenses: {
-      ...research.lenses,
-      review_sites: {
-        ...existing,
-        score,
-        headline: buildHeadline(profile),
-        findings: [...findings, ...existing.findings].slice(0, 8),
-        resources: [
-          {
-            label: `${profile.name} on RepVue`,
-            url: getRepvueProfileUrl(profile.repvueSlug),
-          },
-          ...(existing.resources ?? []),
-        ],
-      },
-    },
+    lenses,
+    diligenceScore: computeDiligenceScore(lenses),
   };
 }
 
