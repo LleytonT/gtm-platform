@@ -4,6 +4,9 @@ import { buildScorecard } from "@/lib/scorecards";
 import { getAnzExpandingSlugs } from "@/lib/signals/anz-expansion";
 import CompaniesClient from "./companies-client";
 
+/** Rendered on demand so cron-refreshed scores are current without a redeploy. */
+export const dynamic = "force-dynamic";
+
 function CompaniesLoading() {
   return (
     <div

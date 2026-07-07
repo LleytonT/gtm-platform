@@ -10,6 +10,12 @@ import { getAnzExpandingSlugs } from "@/lib/signals/anz-expansion";
 import { BENCHMARKS, ScoredCompany } from "@/lib/benchmarks";
 import { ArrowRight, Train } from "lucide-react";
 
+/**
+ * Rendered on demand so cron-refreshed job-board data, signal-log entries,
+ * and "last updated" timestamps are always current without a redeploy.
+ */
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   const anzSlugs = getAnzExpandingSlugs();
   const items: ScoredCompany[] = companies.map((company) => ({

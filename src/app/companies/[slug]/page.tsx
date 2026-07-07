@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
@@ -35,7 +35,7 @@ import {
   WithSources,
 } from "@/components/provenance";
 import { WeightControls, RoleLensTabs } from "@/components/score-settings";
-import { companies, getCompanyBySlug, getResearchForCompany } from "@/lib/data";
+import { getCompanyBySlug, getResearchForCompany } from "@/lib/data";
 import { buildScorecard, getCommunityAggregates } from "@/lib/scorecards";
 import { getScoreColor } from "@/lib/scoring";
 import { SALES_MOTION_LABELS } from "@/lib/benchmarks";
@@ -49,7 +49,7 @@ import { THREE_T_META, THREE_T_ORDER } from "@/lib/three-ts";
 import { formatRetrievedAt } from "@/lib/provenance";
 import { cn } from "@/lib/utils";
 
-const ResearchPlaybook = dynamic(
+const ResearchPlaybook = dynamicImport(
   () =>
     import("@/components/research-playbook").then((m) => ({
       default: m.ResearchPlaybook,
@@ -69,11 +69,12 @@ const DIMENSION_ICONS = {
   talent: Users,
 };
 
-export function generateStaticParams() {
-  return companies.map((company) => ({
-    slug: company.slug,
-  }));
-}
+/**
+ * Rendered on demand: company pages surface runtime data (community
+ * submission aggregates, cron-appended signal-log entries, refreshed job
+ * boards) that changes between deploys.
+ */
+export const dynamic = "force-dynamic";
 
 export default async function CompanyDetailPage(
   props: PageProps<"/companies/[slug]">
