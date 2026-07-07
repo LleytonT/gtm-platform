@@ -1,0 +1,70 @@
+[
+  {
+    "id": "gong-gravy-2026-07-01",
+    "date": "2026-07-01T00:00:00.000Z",
+    "companySlug": "gong",
+    "companyName": "Gong",
+    "metric": "gravy_train",
+    "before": 87,
+    "after": 81,
+    "reason": "APAC GTM postings dropped 40% (15→9) on the public job board, and the Aug 2025 APAC contraction penalty (−8 Territory) is still inside the 12-month window",
+    "source": {
+      "source_name": "Public job board (greenhouse)",
+      "url": "https://boards.greenhouse.io/gongio",
+      "retrieved_at": "2026-07-01T00:00:00.000Z",
+      "confidence": "high",
+      "method": "scraped"
+    }
+  },
+  {
+    "id": "gong-territory-2026-07-01",
+    "date": "2026-07-01T00:00:00.000Z",
+    "companySlug": "gong",
+    "companyName": "Gong",
+    "metric": "territory",
+    "before": 74,
+    "after": 62,
+    "reason": "APAC GTM postings dropped 40% (15→9); regional balance recomputed from the board snapshot and the −8 contraction penalty applied",
+    "source": {
+      "source_name": "Public job board (greenhouse)",
+      "url": "https://boards.greenhouse.io/gongio",
+      "retrieved_at": "2026-07-01T00:00:00.000Z",
+      "confidence": "high",
+      "method": "scraped"
+    }
+  },
+  {
+    "id": "anthropic-anz-2026-06-20",
+    "date": "2026-06-20T00:00:00.000Z",
+    "companySlug": "anthropic",
+    "companyName": "Anthropic",
+    "metric": "anz_expansion",
+    "before": 0,
+    "after": 4,
+    "reason": "first Sydney-based GTM postings detected on the public job board — flagged as \"Expanding into ANZ\"",
+    "source": {
+      "source_name": "Public job board (greenhouse)",
+      "url": "https://boards.greenhouse.io/anthropic",
+      "retrieved_at": "2026-06-20T00:00:00.000Z",
+      "confidence": "high",
+      "method": "scraped"
+    }
+  },
+  {
+    "id": "notion-funding-2026-06-15",
+    "date": "2026-06-15T00:00:00.000Z",
+    "companySlug": "notion",
+    "companyName": "Notion",
+    "metric": "funding_velocity",
+    "before": 42,
+    "after": 38,
+    "reason": "funding recency decayed — last known round (Series C, 2021) is now 4.7 years old with no newer curated record",
+    "source": {
+      "source_name": "Curated funding records",
+      "url": "/methodology#funding-velocity",
+      "retrieved_at": "2026-06-15T00:00:00.000Z",
+      "confidence": "medium",
+      "method": "manual"
+    }
+  }
+]

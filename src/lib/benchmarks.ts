@@ -1,4 +1,17 @@
-import { Company } from "./types";
+/**
+ * Benchmark definitions over sourced scorecards (pure/isomorphic).
+ *
+ * Every benchmark value is read from a CompanyScorecard, where each metric
+ * carries source records. Companies without sourced data for a metric are
+ * excluded from that ranking and shown as "insufficient data".
+ */
+import { SourceRecord } from "./provenance";
+import {
+  CompanyScorecard,
+  ThreeTWeights,
+  computeWeightedScore,
+} from "./scoring";
+import { Company, SalesMotion } from "./types";
 
 export type BenchmarkId =
   | "gravy_train"
@@ -14,8 +27,6 @@ export interface BenchmarkDefinition {
   shortLabel: string;
   description: string;
   unit: string;
-  getValue: (company: Company) => number;
-  higherIsBetter: boolean;
 }
 
 export const BENCHMARKS: BenchmarkDefinition[] = [
@@ -24,60 +35,48 @@ export const BENCHMARKS: BenchmarkDefinition[] = [
     label: "Gravy Train Index",
     shortLabel: "Gravy Train",
     description:
-      "Composite score: Timing (50%) + Territory (30%) + Talent (20%). Where the product sells itself.",
+      "Weighted composite of Timing, Territory, and Talent — weights are yours to set (default 50/30/20). Computed from sourced metrics only.",
     unit: "/100",
-    getValue: (c) => c.gravyTrainScore,
-    higherIsBetter: true,
   },
   {
     id: "gtm_momentum",
     label: "GTM Momentum",
     shortLabel: "GTM Momentum",
     description:
-      "LinkedIn-derived signal: GTM headcount growth, new hires, and sales leadership additions.",
+      "GTM hiring momentum from public Greenhouse/Lever/Ashby job boards: share of GTM postings, volume, and week-over-week change.",
     unit: "/100",
-    getValue: (c) => c.benchmarks.gtmMomentum,
-    higherIsBetter: true,
   },
   {
     id: "funding_velocity",
     label: "Funding Velocity",
     shortLabel: "Funding",
     description:
-      "Recent raises, valuation step-ups, and runway — signals whether the company can invest in GTM.",
+      "Recency and size of the last raise from curated funding records (press-sourced) — signals whether the company can invest in GTM.",
     unit: "/100",
-    getValue: (c) => c.benchmarks.fundingVelocity,
-    higherIsBetter: true,
   },
   {
     id: "quota_reality",
     label: "Quota Reality",
     shortLabel: "Quota Reality",
     description:
-      "Proxy for rep success: quota attainment rates, ramp time, and comp accuracy from review sites.",
+      "Verified community submissions (n ≥ 3 per company-region) where available; RepVue incentive-comp percentiles as a scraped proxy otherwise.",
     unit: "/100",
-    getValue: (c) => c.benchmarks.quotaReality,
-    higherIsBetter: true,
   },
   {
     id: "regional_balance",
     label: "Regional Balance",
     shortLabel: "Regional",
     description:
-      "AMER vs APAC vs EMEA GTM health — flags growing AMER with contracting international teams.",
+      "Distribution of open GTM postings across AMER/EMEA/APAC/ANZ from public job boards — flags AMER-only orgs vs. genuinely global GTM investment.",
     unit: "/100",
-    getValue: (c) => c.benchmarks.regionalBalance,
-    higherIsBetter: true,
   },
   {
     id: "pmf_strength",
     label: "PMF Strength",
     shortLabel: "PMF",
     description:
-      "Product-market fit signals: NPS, retention, competitive position, and market growth tailwinds.",
+      "Product-market fit percentile from RepVue's verified sales-rep ratings.",
     unit: "/100",
-    getValue: (c) => c.benchmarks.pmfStrength,
-    higherIsBetter: true,
   },
 ];
 
@@ -85,35 +84,68 @@ export function getBenchmarkById(id: BenchmarkId): BenchmarkDefinition {
   return BENCHMARKS.find((b) => b.id === id)!;
 }
 
-export function rankCompanies(
-  companies: Company[],
-  benchmarkId: BenchmarkId,
-  limit = 15
-): { company: Company; value: number; rank: number }[] {
-  const benchmark = getBenchmarkById(benchmarkId);
-  const sorted = [...companies].sort((a, b) => {
-    const diff = benchmark.getValue(b) - benchmark.getValue(a);
-    return benchmark.higherIsBetter ? diff : -diff;
-  });
-
-  return sorted.slice(0, limit).map((company, i) => ({
-    company,
-    value: benchmark.getValue(company),
-    rank: i + 1,
-  }));
+/** A company paired with its sourced scorecard — serializable to clients. */
+export interface ScoredCompany {
+  company: Company;
+  scorecard: CompanyScorecard;
+  /** Any active "Expanding into ANZ" detector signal. */
+  anzExpanding: boolean;
 }
 
-export const SALES_MOTION_LABELS: Record<Company["salesMotion"], string> = {
+export function getBenchmarkValue(
+  scorecard: CompanyScorecard,
+  id: BenchmarkId,
+  weights: ThreeTWeights
+): { value: number | null; sources: SourceRecord[] } {
+  if (id === "gravy_train") {
+    const weighted = computeWeightedScore(scorecard, weights);
+    const sources = (["timing", "territory", "talent"] as const).flatMap(
+      (d) => scorecard.dimensions[d].sources
+    );
+    return { value: weighted.value, sources };
+  }
+  return scorecard.benchmarks[id];
+}
+
+export interface RankedEntry {
+  company: Company;
+  scorecard: CompanyScorecard;
+  value: number;
+  rank: number;
+}
+
+/**
+ * Rank companies on a benchmark. Companies with no sourced value are
+ * excluded (they render as "insufficient data" elsewhere, never as 0).
+ */
+export function rankScorecards(
+  items: ScoredCompany[],
+  benchmarkId: BenchmarkId,
+  weights: ThreeTWeights,
+  limit = 15
+): { ranked: RankedEntry[]; insufficient: number } {
+  const withValues = items.flatMap((item) => {
+    const { value } = getBenchmarkValue(item.scorecard, benchmarkId, weights);
+    return value === null
+      ? []
+      : [{ company: item.company, scorecard: item.scorecard, value }];
+  });
+
+  withValues.sort((a, b) => b.value - a.value);
+
+  return {
+    ranked: withValues
+      .slice(0, limit)
+      .map((entry, i) => ({ ...entry, rank: i + 1 })),
+    insufficient: items.length - withValues.length,
+  };
+}
+
+export const SALES_MOTION_LABELS: Record<SalesMotion, string> = {
   enterprise: "Enterprise direct",
   mid_market: "Mid-market",
   smb: "SMB / velocity",
   partner_led: "Partner-led",
   consumption: "Consumption-based",
   hybrid: "Hybrid motion",
-};
-
-export const COMP_MODEL_LABELS: Record<Company["compModel"], string> = {
-  booking: "Booking-based",
-  consumption: "Consumption-based",
-  hybrid: "Hybrid comp",
 };

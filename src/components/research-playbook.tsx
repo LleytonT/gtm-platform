@@ -124,8 +124,13 @@ function LensPanel({
                   "font-mono-data text-lg font-bold tabular-nums",
                   getLensScoreColor(lens.score)
                 )}
+                title={
+                  lens.score === null
+                    ? "No sourced data behind this lens yet"
+                    : undefined
+                }
               >
-                {lens.score}
+                {lens.score ?? "—"}
               </span>
               {open ? (
                 <ChevronUp className="h-4 w-4 text-muted-foreground" aria-hidden />
@@ -229,7 +234,8 @@ export function ResearchPlaybook({
           )}
           {exa && (
             <Badge variant="outline" className="mb-2 ml-2 text-[10px]">
-              Exa LinkedIn · {new Date(exaCacheMeta.scrapedAt).toLocaleDateString()}
+              Licensed people data (Exa) ·{" "}
+              {new Date(exaCacheMeta.scrapedAt).toLocaleDateString()}
             </Badge>
           )}
           <h2 className="text-2xl font-bold">How we diligenced {companyName}</h2>
@@ -247,8 +253,15 @@ export function ResearchPlaybook({
               getLensScoreColor(research.diligenceScore)
             )}
           >
-            {research.diligenceScore}/100
+            {research.diligenceScore === null
+              ? "—"
+              : `${research.diligenceScore}/100`}
           </p>
+          {research.diligenceScore === null && (
+            <p className="mt-0.5 text-[10px] text-muted-foreground">
+              insufficient data
+            </p>
+          )}
         </div>
       </div>
 
@@ -272,7 +285,7 @@ export function ResearchPlaybook({
                   getLensScoreColor(lens.score)
                 )}
               >
-                {lens.score}
+                {lens.score ?? "—"}
               </p>
             </div>
           );
@@ -314,7 +327,8 @@ export function ResearchPlaybook({
             )}
             {exa && (
               <p className="mt-2 text-xs text-muted-foreground">
-                Team LinkedIn signals (tenure, hiring, pedigrees) via{" "}
+                Team signals (tenure, hiring, aggregated pedigrees) via
+                licensed provider{" "}
                 <a
                   href="https://exa.ai"
                   target="_blank"
@@ -351,7 +365,7 @@ export function ResearchPlaybookSummary({
           <Badge key={id} variant="outline" className="text-xs">
             {meta.shortLabel}:{" "}
             <span className={cn("ml-1 font-bold", getLensScoreColor(score))}>
-              {score}
+              {score ?? "—"}
             </span>
           </Badge>
         );

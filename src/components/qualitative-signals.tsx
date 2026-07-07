@@ -11,7 +11,7 @@ import {
 import { SIGNAL_SOURCE_LABELS } from "@/lib/three-ts";
 
 const SOURCE_ICONS: Record<SignalSource, typeof UserSearch> = {
-  linkedin: UserSearch,
+  people_data: UserSearch,
   hiring: Briefcase,
   funding: DollarSign,
   market: TrendingUp,
@@ -73,7 +73,7 @@ export function QualitativeSignals({
 
 export function SignalSourceLegend() {
   const sources: SignalSource[] = [
-    "linkedin",
+    "people_data",
     "hiring",
     "funding",
     "market",

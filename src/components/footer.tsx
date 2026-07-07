@@ -48,18 +48,39 @@ export function Footer() {
           </div>
           <div>
             <h2 className="font-mono-data mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Data sources
+              Trust & data
             </h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Forbes AI 50 (2025)</li>
-              <li>LinkedIn GTM signals</li>
-              <li>Funding & press events</li>
-              <li>RepVue quota proxies</li>
+              <li>
+                <Link href="/methodology" className="hover:text-foreground">
+                  Methodology & sources
+                </Link>
+              </li>
+              <li>
+                <Link href="/signals" className="hover:text-foreground">
+                  Signal change log
+                </Link>
+              </li>
+              <li>
+                <Link href="/submit" className="hover:text-foreground">
+                  Submit comp data (anonymous)
+                </Link>
+              </li>
+              <li>
+                <Link href="/agent" className="hover:text-foreground">
+                  Signal alerts (free)
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
         <div className="mt-8 hairline-b border-t pt-8 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} GTM Hire · Benchmark data is illustrative for diligence purposes
+          &copy; {new Date().getFullYear()} GTM Hire · Every rendered number
+          carries a source record — see{" "}
+          <Link href="/methodology" className="underline underline-offset-2 hover:text-foreground">
+            /methodology
+          </Link>{" "}
+          for inputs, weights, and how to dispute a data point
         </div>
       </div>
     </footer>

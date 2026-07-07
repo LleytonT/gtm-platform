@@ -2,20 +2,28 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Company } from "@/lib/types";
 import {
   BENCHMARKS,
   BenchmarkId,
-  COMP_MODEL_LABELS,
   SALES_MOTION_LABELS,
-  rankCompanies,
+  ScoredCompany,
+  getBenchmarkValue,
+  rankScorecards,
 } from "@/lib/benchmarks";
+import { PRODUCT_PRICING_LABELS, REP_COMP_LABELS } from "@/lib/pricing-models";
 import { BenchmarkBarChart } from "@/components/benchmark-charts";
+import { LastUpdated } from "@/components/provenance";
+import {
+  RoleLensTabs,
+  WeightControls,
+  useScoreSettings,
+} from "@/components/score-settings";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function BenchmarkDashboard({ companies }: { companies: Company[] }) {
+export function BenchmarkDashboard({ items }: { items: ScoredCompany[] }) {
+  const { effectiveWeights } = useScoreSettings();
   const [activeBenchmark, setActiveBenchmark] =
     useState<BenchmarkId>("gravy_train");
   const [categoryFilter, setCategoryFilter] = useState<
@@ -24,19 +32,31 @@ export function BenchmarkDashboard({ companies }: { companies: Company[] }) {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
-    if (categoryFilter === "all") return companies;
-    return companies.filter((c) => c.categories.includes(categoryFilter));
-  }, [companies, categoryFilter]);
+    if (categoryFilter === "all") return items;
+    return items.filter((item) =>
+      item.company.categories.includes(categoryFilter)
+    );
+  }, [items, categoryFilter]);
 
-  const rankings = useMemo(
-    () => rankCompanies(filtered, activeBenchmark, 12),
-    [filtered, activeBenchmark]
+  const { ranked, insufficient } = useMemo(
+    () => rankScorecards(filtered, activeBenchmark, effectiveWeights, 12),
+    [filtered, activeBenchmark, effectiveWeights]
   );
 
   const benchmark = BENCHMARKS.find((b) => b.id === activeBenchmark)!;
-  const hoveredCompany = hoveredSlug
-    ? companies.find((c) => c.slug === hoveredSlug)
-    : rankings[0]?.company;
+  const hovered = hoveredSlug
+    ? items.find((item) => item.company.slug === hoveredSlug)
+    : ranked[0]
+      ? items.find((item) => item.company.slug === ranked[0].company.slug)
+      : undefined;
+
+  const hoveredScore = hovered
+    ? getBenchmarkValue(hovered.scorecard, "gravy_train", effectiveWeights)
+        .value
+    : null;
+  const hoveredMomentum = hovered
+    ? hovered.scorecard.benchmarks.gtm_momentum.value
+    : null;
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
@@ -64,9 +84,7 @@ export function BenchmarkDashboard({ companies }: { companies: Company[] }) {
             <select
               value={categoryFilter}
               onChange={(e) =>
-                setCategoryFilter(
-                  e.target.value as typeof categoryFilter
-                )
+                setCategoryFilter(e.target.value as typeof categoryFilter)
               }
               className="focus-ring border border-rule bg-card px-2 py-1.5 text-xs font-medium"
               aria-label="Filter by company category"
@@ -80,17 +98,20 @@ export function BenchmarkDashboard({ companies }: { companies: Company[] }) {
         </div>
 
         <div className="border border-rule bg-card p-4 sm:p-6">
-          <div className="mb-4">
-            <h2 className="font-display text-xl font-semibold">
-              {benchmark.label}
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {benchmark.description}
-            </p>
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="font-display text-xl font-semibold">
+                {benchmark.label}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {benchmark.description}
+              </p>
+            </div>
+            <RoleLensTabs className="shrink-0" />
           </div>
 
           <BenchmarkBarChart
-            items={rankings.map((r) => ({
+            items={ranked.map((r) => ({
               slug: r.company.slug,
               name: r.company.name,
               value: r.value,
@@ -101,7 +122,11 @@ export function BenchmarkDashboard({ companies }: { companies: Company[] }) {
             onHover={setHoveredSlug}
           />
 
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 flex items-center justify-between">
+            <p className="text-xs text-muted-foreground">
+              {insufficient > 0 &&
+                `${insufficient} compan${insufficient === 1 ? "y" : "ies"} excluded — insufficient sourced data for this metric.`}
+            </p>
             <Button
               variant="ghost"
               size="sm"
@@ -115,43 +140,52 @@ export function BenchmarkDashboard({ companies }: { companies: Company[] }) {
       </div>
 
       <aside className="space-y-4">
-        {hoveredCompany && (
+        <WeightControls />
+
+        {hovered && (
           <div className="border border-rule bg-card p-4">
             <p className="font-mono-data text-xs uppercase tracking-widest text-gravy">
               Company snapshot
             </p>
             <h3 className="mt-2 font-display text-lg font-semibold">
-              {hoveredCompany.name}
+              {hovered.company.name}
             </h3>
             <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
-              {hoveredCompany.sellsItself}
+              {hovered.company.sellsItself}
             </p>
             <dl className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Gravy train</dt>
                 <dd className="font-mono-data font-semibold">
-                  {hoveredCompany.gravyTrainScore}
+                  {hoveredScore ?? "—"}
                 </dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Sales motion</dt>
-                <dd>{SALES_MOTION_LABELS[hoveredCompany.salesMotion]}</dd>
+                <dd>{SALES_MOTION_LABELS[hovered.company.salesMotion]}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-muted-foreground">Comp model</dt>
-                <dd>{COMP_MODEL_LABELS[hoveredCompany.compModel]}</dd>
+                <dt className="text-muted-foreground">Product pricing</dt>
+                <dd>{PRODUCT_PRICING_LABELS[hovered.company.productPricingModel]}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Rep comp model</dt>
+                <dd>{REP_COMP_LABELS[hovered.company.repCompModel]}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">GTM momentum</dt>
                 <dd className="font-mono-data font-semibold">
-                  {hoveredCompany.benchmarks.gtmMomentum}
+                  {hoveredMomentum ?? "—"}
                 </dd>
               </div>
             </dl>
+            <div className="mt-3">
+              <LastUpdated iso={hovered.scorecard.lastUpdated} />
+            </div>
             <Button
               className="mt-4 w-full"
               size="sm"
-              render={<Link href={`/companies/${hoveredCompany.slug}`} />}
+              render={<Link href={`/companies/${hovered.company.slug}`} />}
             >
               Full benchmark profile
             </Button>
@@ -163,10 +197,13 @@ export function BenchmarkDashboard({ companies }: { companies: Company[] }) {
             How to read this
           </p>
           <p className="mt-2 text-sm text-primary-foreground/80">
-            Benchmarks combine quantitative signals — funding, LinkedIn GTM
-            headcount, regional balance, and quota proxies — so you can find
-            where the product is actually selling, not just where recruiters
-            say it is.
+            Every number is computed from sourced inputs — public job boards,
+            curated funding records, verified rep ratings, and community
+            submissions. Hover any score for its sources, or read the{" "}
+            <Link href="/methodology" className="underline underline-offset-2">
+              full methodology
+            </Link>
+            .
           </p>
         </div>
       </aside>

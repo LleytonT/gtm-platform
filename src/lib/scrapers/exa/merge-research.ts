@@ -1,4 +1,5 @@
 import type { CompanyResearch, ResearchFinding } from "@/lib/types";
+import { computeDiligenceScore } from "@/lib/research-playbook";
 import { scoreFromExaSignals } from "./signals";
 import type { ExaCompanySignals } from "./types";
 
@@ -45,11 +46,9 @@ function buildFindings(signals: ExaCompanySignals): ResearchFinding[] {
   }
 
   if (promotions.internalPromotions > 0) {
-    const example = promotions.promotionExamples[0];
+    // Aggregate count only — individual names are never rendered.
     findings.push({
-      text: example
-        ? `Internal progression detected: ${example}${promotions.internalPromotions > 1 ? ` (+${promotions.internalPromotions - 1} more)` : ""}`
-        : `${promotions.internalPromotions} internal promotions visible in work history`,
+      text: `${promotions.internalPromotions} internal promotions visible in aggregated work-history data`,
       sentiment: "positive",
       confidence: "medium",
       feedsThreeT: ["talent"],
@@ -59,28 +58,19 @@ function buildFindings(signals: ExaCompanySignals): ResearchFinding[] {
   if (pedigrees.topPriorEmployers.length > 0) {
     const top = pedigrees.topPriorEmployers
       .slice(0, 3)
-      .map((p) => `${p.company} (${p.count})`)
+      .map((p) => `${p.count} from ${p.company}`)
       .join(", ");
     findings.push({
-      text: `Top prior employers: ${top}`,
+      text: `Prior-employer mix (aggregated): ${top}`,
       sentiment: "neutral",
       confidence: "medium",
       feedsThreeT: ["talent", "territory"],
     });
   }
 
-  for (const pedigree of pedigrees.notablePedigrees.slice(0, 2)) {
-    findings.push({
-      text: `Notable pedigree: ${pedigree}`,
-      sentiment: "positive",
-      confidence: "medium",
-      feedsThreeT: ["talent"],
-    });
-  }
-
   if (findings.length === 0) {
     findings.push({
-      text: `Limited public LinkedIn profiles found for ${signals.companyName} GTM team — run a manual sweep`,
+      text: `Limited people-data coverage for ${signals.companyName} GTM team — verify with your own calls`,
       sentiment: "neutral",
       confidence: "emerging",
       feedsThreeT: ["talent"],
@@ -102,7 +92,7 @@ function buildHeadline(signals: ExaCompanySignals): string {
     parts.push(`${signals.promotions.internalPromotions} internal promotions`);
   }
   if (parts.length === 0) {
-    return "LinkedIn team signals from Exa";
+    return "Licensed people-data signals (Exa)";
   }
   return parts.join(" · ");
 }
@@ -115,30 +105,26 @@ export function mergeExaIntoResearch(
   const existing = research.lenses.team_linkedin;
   const score = scoreFromExaSignals(signals);
 
-  const linkedInSearch = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(signals.companyName + " account executive")}`;
+  const lenses = {
+    ...research.lenses,
+    team_linkedin: {
+      ...existing,
+      score,
+      headline: buildHeadline(signals),
+      findings: [...findings, ...existing.findings].slice(0, 8),
+      resources: [
+        {
+          label: "Data via Exa (licensed)",
+          url: "https://exa.ai",
+        },
+        ...(existing.resources ?? []),
+      ],
+    },
+  };
 
   return {
     ...research,
-    diligenceScore: Math.round((research.diligenceScore + score) / 2),
-    lenses: {
-      ...research.lenses,
-      team_linkedin: {
-        ...existing,
-        score,
-        headline: buildHeadline(signals),
-        findings: [...findings, ...existing.findings].slice(0, 8),
-        resources: [
-          {
-            label: `${signals.companyName} GTM team on LinkedIn`,
-            url: linkedInSearch,
-          },
-          {
-            label: "Data via Exa",
-            url: "https://exa.ai",
-          },
-          ...(existing.resources ?? []),
-        ],
-      },
-    },
+    lenses,
+    diligenceScore: computeDiligenceScore(lenses),
   };
 }

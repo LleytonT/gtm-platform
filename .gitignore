@@ -37,6 +37,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# runtime data written by cron refreshes and community submissions
+/data/
+
+# typescript incremental build info
+tsconfig.tsbuildinfo
+
 # agent skills (canonical copy in .cursor/skills)
 .agents/
 

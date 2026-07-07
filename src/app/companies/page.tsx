@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 import { companies, getResearchForCompany } from "@/lib/data";
+import { buildScorecard } from "@/lib/scorecards";
+import { getAnzExpandingSlugs } from "@/lib/signals/anz-expansion";
 import CompaniesClient from "./companies-client";
 
 function CompaniesLoading() {
@@ -15,9 +17,12 @@ function CompaniesLoading() {
 }
 
 export default function CompaniesPage() {
+  const anzSlugs = getAnzExpandingSlugs();
   const items = companies.map((company) => ({
     company,
+    scorecard: buildScorecard(company.slug),
     research: getResearchForCompany(company),
+    anzExpanding: anzSlugs.has(company.slug),
   }));
 
   const industries = [...new Set(companies.map((c) => c.industry))];

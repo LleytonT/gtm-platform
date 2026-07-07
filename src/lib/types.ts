@@ -1,3 +1,6 @@
+import { ProductPricingModel, RepCompModel } from "./pricing-models";
+import { SourceRecord } from "./provenance";
+
 export type ThreeTKey = "timing" | "territory" | "talent";
 
 export type ResearchLensId =
@@ -17,7 +20,8 @@ export interface ResearchFinding {
 }
 
 export interface ResearchLensData {
-  score: number;
+  /** null ⇒ no sourced data behind this lens — render "insufficient data". */
+  score: number | null;
   headline: string;
   findings: ResearchFinding[];
   checklist: string[];
@@ -26,21 +30,16 @@ export interface ResearchLensData {
 
 export interface CompanyResearch {
   lenses: Record<ResearchLensId, ResearchLensData>;
-  diligenceScore: number;
+  /** null when no lens has sourced data. */
+  diligenceScore: number | null;
 }
 
 export type SignalSource =
-  | "linkedin"
+  | "people_data"
   | "hiring"
   | "funding"
   | "market"
   | "community";
-
-export type GravyTrainVerdict =
-  | "On the gravy train"
-  | "Building momentum"
-  | "Watch closely"
-  | "Too early";
 
 export interface QualitativeSignal {
   text: string;
@@ -48,8 +47,12 @@ export interface QualitativeSignal {
   confidence: "high" | "medium" | "emerging";
 }
 
+/**
+ * Qualitative dimension context — verdict copy and signals only.
+ * Numeric dimension scores live exclusively on CompanyScorecard, where every
+ * value carries source records.
+ */
 export interface ThreeTDimension {
-  score: number;
   verdict: string;
   signals: QualitativeSignal[];
 }
@@ -70,16 +73,6 @@ export type SalesMotion =
   | "consumption"
   | "hybrid";
 
-export type CompModel = "booking" | "consumption" | "hybrid";
-
-export interface GtmBenchmarks {
-  gtmMomentum: number;
-  fundingVelocity: number;
-  regionalBalance: number;
-  quotaReality: number;
-  pmfStrength: number;
-}
-
 export interface Company {
   slug: string;
   name: string;
@@ -94,13 +87,17 @@ export interface Company {
   sellsItself: string;
   categories: CompanyCategory[];
   salesMotion: SalesMotion;
-  compModel: CompModel;
-  benchmarks: GtmBenchmarks;
+  /** How the company charges customers — sourced from public pricing pages. */
+  productPricingModel: ProductPricingModel;
+  productPricingSource: SourceRecord | null;
+  /**
+   * How reps are paid — sourced from human submissions only.
+   * Defaults to "unknown"; never inferred from the pricing model.
+   */
+  repCompModel: RepCompModel;
   threeTs: ThreeTs;
-  gravyTrainScore: number;
-  gravyTrainVerdict: GravyTrainVerdict;
+  /** Curated background facts — flagged as unverified curation in the UI. */
   financials: {
-    score: number;
     revenue: string;
     funding: string;
     runway: string;
@@ -109,43 +106,19 @@ export interface Company {
     investors: string[];
   };
   pmf: {
-    score: number;
-    nps: number;
     retention: string;
     marketGrowth: string;
     competitivePosition: string;
     signals: string[];
   };
   packages: {
-    score: number;
     baseSalary: string;
     ote: string;
     equity: string;
     benefits: string[];
     quota: string;
-    quotaAttainment: string;
   };
   hiringRoles: string[];
   gtmTeamSize: string;
   expandingRegions?: string[];
-}
-
-export type NotableActivityType =
-  | "funding"
-  | "hiring"
-  | "expansion"
-  | "leadership"
-  | "product"
-  | "contraction";
-
-export interface NotableActivity {
-  id: string;
-  date: string;
-  companySlug: string;
-  companyName: string;
-  type: NotableActivityType;
-  headline: string;
-  detail: string;
-  impact: "positive" | "neutral" | "negative";
-  feedsThreeT: ThreeTKey[];
 }
