@@ -34,7 +34,7 @@ export const BENCHMARKS: BenchmarkDefinition[] = [
     label: "GTM Momentum",
     shortLabel: "GTM Momentum",
     description:
-      "LinkedIn-derived signal: GTM headcount growth, new hires, and sales leadership additions.",
+      "Job-board-derived signal: open GTM postings, publish velocity, and change vs the prior snapshot on official Greenhouse/Lever/Ashby boards.",
     unit: "/100",
     getValue: (c) => c.benchmarks.gtmMomentum,
     higherIsBetter: true,
@@ -54,7 +54,7 @@ export const BENCHMARKS: BenchmarkDefinition[] = [
     label: "Quota Reality",
     shortLabel: "Quota Reality",
     description:
-      "Proxy for rep success: quota attainment rates, ramp time, and comp accuracy from review sites.",
+      "Rep success signal: verified community submissions first (n ≥ 3 per company-region), RepVue percentiles as fallback proxy.",
     unit: "/100",
     getValue: (c) => c.benchmarks.quotaReality,
     higherIsBetter: true,

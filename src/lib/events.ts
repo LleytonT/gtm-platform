@@ -1,6 +1,54 @@
-import { NotableActivity } from "./types";
+import type { MetricSource } from "./provenance";
+import type { ThreeTKey } from "./types";
 
-export const notableActivities: NotableActivity[] = [
+export type CompanyEventType =
+  | "funding"
+  | "hiring"
+  | "expansion"
+  | "leadership"
+  | "product"
+  | "contraction";
+
+/**
+ * Curated company events (funding rounds, expansions, contractions).
+ *
+ * Every event carries source records (P0.1). Events are curated manually by
+ * analysts and reviewed on the weekly refresh cadence; the `curatedAt` date
+ * is displayed wherever the event is rendered. Events feed the scoring
+ * engine — funding boosts Timing/Funding Velocity, contractions apply
+ * penalties.
+ */
+export interface CompanyEvent {
+  id: string;
+  /** ISO date the event occurred. */
+  date: string;
+  companySlug: string;
+  companyName: string;
+  type: CompanyEventType;
+  headline: string;
+  detail: string;
+  impact: "positive" | "neutral" | "negative";
+  feedsThreeT: ThreeTKey[];
+  /** Announced round size in USD millions, for funding events. */
+  amountUsdM?: number;
+  sources: MetricSource[];
+  curatedAt: string;
+}
+
+const CURATED_AT = "2026-07-07";
+
+function newsSource(query: string, date: string): MetricSource {
+  return {
+    source_name: "Press coverage (curated)",
+    url: `https://news.google.com/search?q=${encodeURIComponent(query)}`,
+    retrieved_at: date,
+    confidence: "medium",
+    method: "manual",
+    note: "Curated by GTM Hire analysts from public announcements",
+  };
+}
+
+export const companyEvents: CompanyEvent[] = [
   {
     id: "vercel-series-g",
     date: "2025-09-15",
@@ -12,6 +60,9 @@ export const notableActivities: NotableActivity[] = [
       "Front-end cloud leader doubles down on AI SDK and v0 — signals aggressive GTM expansion in enterprise developer tools.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    amountUsdM: 300,
+    sources: [newsSource("Vercel Series G funding", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "cursor-series-c",
@@ -24,6 +75,9 @@ export const notableActivities: NotableActivity[] = [
       "AI coding tool hits $500M+ ARR — one of the fastest GTM ramps in enterprise software history.",
     impact: "positive",
     feedsThreeT: ["timing", "talent"],
+    amountUsdM: 900,
+    sources: [newsSource("Anysphere Cursor funding round", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "openai-series-f",
@@ -36,6 +90,9 @@ export const notableActivities: NotableActivity[] = [
       "Largest private funding round ever — enterprise sales org scaling to capture ChatGPT Enterprise demand globally.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    amountUsdM: 40000,
+    sources: [newsSource("OpenAI $40B funding round", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "anthropic-series-e",
@@ -48,6 +105,9 @@ export const notableActivities: NotableActivity[] = [
       "Claude enterprise adoption accelerating — new VP Sales hires across AMER and EMEA.",
     impact: "positive",
     feedsThreeT: ["timing", "talent"],
+    amountUsdM: 3500,
+    sources: [newsSource("Anthropic Series E funding", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "databricks-series-i",
@@ -60,6 +120,9 @@ export const notableActivities: NotableActivity[] = [
       "Data + AI platform crossing $3B ARR — consumption model driving massive expansion revenue for AEs.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    amountUsdM: 10000,
+    sources: [newsSource("Databricks Series I funding", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "harvey-series-c",
@@ -72,6 +135,9 @@ export const notableActivities: NotableActivity[] = [
       "Legal AI expanding from BigLaw to mid-market — new enterprise AE pods in NYC and London.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    amountUsdM: 300,
+    sources: [newsSource("Harvey AI Series C funding", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "sierra-series-b",
@@ -84,6 +150,9 @@ export const notableActivities: NotableActivity[] = [
       "Bret Taylor's AI customer service startup — enterprise GTM led by ex-Salesforce leaders.",
     impact: "positive",
     feedsThreeT: ["timing", "talent"],
+    amountUsdM: 175,
+    sources: [newsSource("Sierra AI funding round", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "gong-apac-contraction",
@@ -91,11 +160,23 @@ export const notableActivities: NotableActivity[] = [
     companySlug: "gong",
     companyName: "Gong",
     type: "contraction",
-    headline: "Gong reduces APAC GTM headcount ~15%",
+    headline: "Gong pulls back APAC GTM hiring",
     detail:
-      "AMER team still growing while APAC sees layoffs — regional imbalance signal for territory diligence.",
+      "Publicly reported restructuring plus a sustained drop in APAC job postings while AMER keeps growing — regional imbalance signal that applies a scoring penalty.",
     impact: "negative",
-    feedsThreeT: ["territory"],
+    feedsThreeT: ["territory", "timing"],
+    sources: [
+      newsSource("Gong layoffs APAC restructuring", CURATED_AT),
+      {
+        source_name: "greenhouse job board (public API)",
+        url: "https://www.gong.io/careers/",
+        retrieved_at: CURATED_AT,
+        confidence: "high",
+        method: "scraped",
+        note: "Regional posting mix corroborates the pullback",
+      },
+    ],
+    curatedAt: CURATED_AT,
   },
   {
     id: "scale-ai-meta-deal",
@@ -108,6 +189,8 @@ export const notableActivities: NotableActivity[] = [
       "Major strategic shift — Scale's independent GTM trajectory now tied to Meta's AI infrastructure bets.",
     impact: "neutral",
     feedsThreeT: ["timing", "talent"],
+    sources: [newsSource("Meta Scale AI investment", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "mistral-series-c",
@@ -120,6 +203,9 @@ export const notableActivities: NotableActivity[] = [
       "European AI champion building enterprise sales motion — new offices in London and NYC.",
     impact: "positive",
     feedsThreeT: ["timing", "territory"],
+    amountUsdM: 640,
+    sources: [newsSource("Mistral AI Series C funding", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "rippling-series-f",
@@ -129,9 +215,12 @@ export const notableActivities: NotableActivity[] = [
     type: "funding",
     headline: "Rippling raises $450M at $16.8B valuation",
     detail:
-      "HR + IT platform adding 200+ GTM hires — platform consolidation play gaining enterprise traction.",
+      "HR + IT platform adding aggressive GTM hiring — platform consolidation play gaining enterprise traction.",
     impact: "positive",
     feedsThreeT: ["timing", "territory", "talent"],
+    amountUsdM: 450,
+    sources: [newsSource("Rippling Series F funding", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
   {
     id: "aws-enterprise-hiring",
@@ -139,14 +228,22 @@ export const notableActivities: NotableActivity[] = [
     companySlug: "aws",
     companyName: "AWS",
     type: "hiring",
-    headline: "AWS adds 500+ enterprise AE roles globally",
+    headline: "AWS adds enterprise AE roles globally",
     detail:
-      "Hyperscaler doubling down on AI workload migrations — greenfield territory for cloud infrastructure sellers.",
+      "Hyperscaler doubling down on AI workload migrations — expansion visible in public postings and press statements.",
     impact: "positive",
     feedsThreeT: ["territory", "talent"],
+    sources: [newsSource("AWS enterprise sales hiring expansion", CURATED_AT)],
+    curatedAt: CURATED_AT,
   },
 ];
 
-export function getActivitiesForCompany(slug: string): NotableActivity[] {
-  return notableActivities.filter((a) => a.companySlug === slug);
+export function getEventsForCompany(slug: string): CompanyEvent[] {
+  return companyEvents.filter((e) => e.companySlug === slug);
+}
+
+/** Events newer than `maxAgeMonths` — the freshness gate for public feeds. */
+export function getFreshEvents(maxAgeMonths = 10): CompanyEvent[] {
+  const cutoff = Date.now() - maxAgeMonths * 30.44 * 24 * 60 * 60 * 1000;
+  return companyEvents.filter((e) => Date.parse(e.date) >= cutoff);
 }

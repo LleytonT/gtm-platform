@@ -1,0 +1,760 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-07T13:34:44.118Z",
+  "entries": [
+    {
+      "id": "datadog-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "datadog",
+      "companyName": "datadog",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (194 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 416 total postings, 194 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://careers.datadoghq.com",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "datadog-anz-posting-7548129",
+      "date": "2026-01-20T21:53:44-05:00",
+      "companySlug": "datadog",
+      "companyName": "datadog",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Customer Success Associate - Commercial Accounts",
+      "detail": "\"Customer Success Associate - Commercial Accounts\" (Sydney, Australia) published 2026-01-20 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://careers.datadoghq.com/detail/7548129/?gh_jid=7548129",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "gong-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "gong",
+      "companyName": "gong",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (35 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 97 total postings, 35 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://www.gong.io/careers/",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "figma-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "figma",
+      "companyName": "figma",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (47 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 168 total postings, 47 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://www.figma.com/careers/",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "figma-anz-posting-5803515004",
+      "date": "2026-02-17T21:22:34-05:00",
+      "companySlug": "figma",
+      "companyName": "figma",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Account Executive, Enterprise (Sydney or Melbourne, Australia)",
+      "detail": "\"Account Executive, Enterprise (Sydney or Melbourne, Australia)\" (Sydney, Australia • Melbourne, Australia) published 2026-02-17 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://boards.greenhouse.io/figma/jobs/5803515004?gh_jid=5803515004",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "mercury-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "mercury",
+      "companyName": "mercury",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (5 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 54 total postings, 5 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://mercury.com/jobs",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "anthropic",
+      "companyName": "anthropic",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (83 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 395 total postings, 83 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://www.anthropic.com/careers",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-anz-posting-5222180008",
+      "date": "2026-06-12T09:57:37-04:00",
+      "companySlug": "anthropic",
+      "companyName": "anthropic",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Account Executive - ASEAN",
+      "detail": "\"Account Executive - ASEAN\" (Sydney, Australia) published 2026-06-12 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://job-boards.greenhouse.io/anthropic/jobs/5222180008",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "databricks-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "databricks",
+      "companyName": "databricks",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (344 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 786 total postings, 344 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://www.databricks.com/company/careers",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "databricks-anz-posting-8441877002",
+      "date": "2026-05-14T02:55:09-04:00",
+      "companySlug": "databricks",
+      "companyName": "databricks",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Account Executive - Federal",
+      "detail": "\"Account Executive - Federal\" (Australian Capital Territory, Australia) published 2026-05-14 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://databricks.com/company/careers/open-positions/job?gh_jid=8441877002",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "glean-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "glean",
+      "companyName": "glean",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (43 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 133 total postings, 43 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://www.glean.com/careers",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "glean-anz-posting-4701313005",
+      "date": "2026-06-02T01:17:34-04:00",
+      "companySlug": "glean",
+      "companyName": "glean",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Vice President of Sales, ANZ",
+      "detail": "\"Vice President of Sales, ANZ\" (Sydney, Australia) published 2026-06-02 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://job-boards.greenhouse.io/gleanwork/jobs/4701313005",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "scale-ai-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "scale-ai",
+      "companyName": "scale-ai",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (27 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 184 total postings, 27 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://scale.com/careers",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "vercel-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "vercel",
+      "companyName": "vercel",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (21 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 63 total postings, 21 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://vercel.com/careers",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "vercel-anz-posting-5841911004",
+      "date": "2026-06-23T18:49:37-04:00",
+      "companySlug": "vercel",
+      "companyName": "vercel",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Account Executive, Majors (APAC)",
+      "detail": "\"Account Executive, Majors (APAC)\" (Hybrid - Sydney) published 2026-06-23 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://job-boards.greenhouse.io/vercel/jobs/5841911004",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "together-ai-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "together-ai",
+      "companyName": "together-ai",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (5 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 59 total postings, 5 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://www.together.ai/careers",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "xai-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "xai",
+      "companyName": "xai",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (2 open GTM roles)",
+      "detail": "First snapshot from the public greenhouse board: 212 total postings, 2 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "greenhouse job board (public API)",
+          "url": "https://x.ai/careers",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "mistral-ai-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "mistral-ai",
+      "companyName": "mistral-ai",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (26 open GTM roles)",
+      "detail": "First snapshot from the public lever board: 177 total postings, 26 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "lever job board (public API)",
+          "url": "https://jobs.lever.co/mistral",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "openai-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "openai",
+      "companyName": "openai",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (127 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 712 total postings, 127 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/openai",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "openai-anz-posting-209fa4ab-fcc1-4442-8ae6-7ec47902b518",
+      "date": "2026-05-11T14:17:08.987+00:00",
+      "companySlug": "openai",
+      "companyName": "openai",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Customer Success Manager, Ads Solutions",
+      "detail": "\"Customer Success Manager, Ads Solutions\" (Sydney, Australia) published 2026-05-11 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/openai/209fa4ab-fcc1-4442-8ae6-7ec47902b518",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "cursor-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "cursor",
+      "companyName": "cursor",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (45 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 110 total postings, 45 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/cursor",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "cursor-anz-posting-9879627d-b996-4213-bbdf-82a18884015f",
+      "date": "2026-06-02T20:39:00.192+00:00",
+      "companySlug": "cursor",
+      "companyName": "cursor",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Solutions Architect - Australia",
+      "detail": "\"Solutions Architect - Australia\" (Australia) published 2026-06-02 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/cursor/9879627d-b996-4213-bbdf-82a18884015f",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "notion-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "notion",
+      "companyName": "notion",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (65 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 148 total postings, 65 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/notion",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "notion-anz-posting-bbeea3e7-7b2a-4d39-865a-0e2453d72259",
+      "date": "2026-06-10T00:00:48.418+00:00",
+      "companySlug": "notion",
+      "companyName": "notion",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Customer Success Manager, Sydney",
+      "detail": "\"Customer Success Manager, Sydney\" (Sydney, Australia) published 2026-06-10 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/notion/bbeea3e7-7b2a-4d39-865a-0e2453d72259",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "vanta-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "vanta",
+      "companyName": "vanta",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (55 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 109 total postings, 55 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/vanta",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "vanta-anz-posting-7a9dbc4c-a509-4117-bdb1-51ac65da7b1f",
+      "date": "2026-06-23T23:40:33.660+00:00",
+      "companySlug": "vanta",
+      "companyName": "vanta",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Account Manager, Early Stage - APJ",
+      "detail": "\"Account Manager, Early Stage - APJ\" (Sydney, Australia) published 2026-06-23 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/vanta/7a9dbc4c-a509-4117-bdb1-51ac65da7b1f",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "elevenlabs-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "elevenlabs",
+      "companyName": "elevenlabs",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (63 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 155 total postings, 63 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/elevenlabs",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "elevenlabs-anz-posting-1a9d687d-0030-4732-8160-f1da54844bba",
+      "date": "2026-04-29T13:13:47.589+00:00",
+      "companySlug": "elevenlabs",
+      "companyName": "elevenlabs",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Enterprise Solutions Engineer - ANZ",
+      "detail": "\"Enterprise Solutions Engineer - ANZ\" (Australia) published 2026-04-29 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/elevenlabs/1a9d687d-0030-4732-8160-f1da54844bba",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "runway-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "runway",
+      "companyName": "runway",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (1 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 4 total postings, 1 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/runway",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "perplexity-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "perplexity",
+      "companyName": "perplexity",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (9 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 78 total postings, 9 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/perplexity",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "sierra-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "sierra",
+      "companyName": "sierra",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (29 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 149 total postings, 29 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/sierra",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "sierra-anz-posting-8e477331-3525-4e87-b311-e500f0fa61e9",
+      "date": "2026-03-24T03:49:36.349+00:00",
+      "companySlug": "sierra",
+      "companyName": "sierra",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Enterprise Account Executive (ANZ)",
+      "detail": "\"Enterprise Account Executive (ANZ)\" (Sydney) published 2026-03-24 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/sierra/8e477331-3525-4e87-b311-e500f0fa61e9",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "writer-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "writer",
+      "companyName": "writer",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (9 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 49 total postings, 9 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/writer",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "cohere-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "cohere",
+      "companyName": "cohere",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (27 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 126 total postings, 27 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/cohere",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "speak-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "speak",
+      "companyName": "speak",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (7 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 41 total postings, 7 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/speak",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "abridge-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "abridge",
+      "companyName": "abridge",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (4 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 53 total postings, 4 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/abridge",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "harvey-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "harvey",
+      "companyName": "harvey",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (71 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 334 total postings, 71 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/harvey",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    },
+    {
+      "id": "harvey-anz-posting-622c22e1-5dae-4ea8-a8ee-f933b223ed5b",
+      "date": "2026-06-18T09:47:01.762+00:00",
+      "companySlug": "harvey",
+      "companyName": "harvey",
+      "type": "anz_detector",
+      "headline": "AU/NZ GTM posting live: Customer Success Manager, ANZ - Major Accounts, Sydney",
+      "detail": "\"Customer Success Manager, ANZ - Major Accounts, Sydney\" (Sydney) published 2026-06-18 — ANZ expansion detector: first-party job posting.",
+      "impact": "positive",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/harvey/622c22e1-5dae-4ea8-a8ee-f933b223ed5b",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped",
+          "note": "Job posting on official board"
+        }
+      ]
+    },
+    {
+      "id": "deepl-tracking-2026-07-07",
+      "date": "2026-07-07T13:34:44.118Z",
+      "companySlug": "deepl",
+      "companyName": "deepl",
+      "type": "tracking_started",
+      "headline": "Job-board tracking started (14 open GTM roles)",
+      "detail": "First snapshot from the public ashby board: 23 total postings, 14 GTM. Momentum diffs begin with the next refresh.",
+      "impact": "neutral",
+      "sources": [
+        {
+          "source_name": "ashby job board (public API)",
+          "url": "https://jobs.ashbyhq.com/deepl",
+          "retrieved_at": "2026-07-07T13:34:44.118Z",
+          "confidence": "high",
+          "method": "scraped"
+        }
+      ]
+    }
+  ]
+}

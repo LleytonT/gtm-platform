@@ -12,65 +12,77 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { CompanyCard } from "@/components/company-card";
-import { SignalSourceLegend } from "@/components/qualitative-signals";
+import { ScoredCompanyCard } from "@/components/scored-company-card";
+import { WeightsPanel } from "@/components/weights-panel";
+import { LastUpdated } from "@/components/provenance";
+import { useWeights } from "@/components/weights-provider";
 import { SectionHeader } from "@/components/section-header";
-import { THREE_T_META } from "@/lib/three-ts";
-import { Company, CompanyResearch } from "@/lib/types";
-import { Search, SlidersHorizontal, Train } from "lucide-react";
+import { computeComposite } from "@/lib/scoring/weights";
+import type { ScoredCompany } from "@/lib/scored";
+import type { DimensionScore } from "@/lib/scoring/types";
+import { MapPin, Search, SlidersHorizontal, Train } from "lucide-react";
 
 type SortOption =
-  | "gravyTrain"
+  | "composite"
   | "timing"
   | "territory"
   | "talent"
-  | "growth"
   | "gtm_momentum"
   | "funding_velocity"
-  | "quota_reality";
+  | "quota_reality"
+  | "regional_balance"
+  | "pmf_strength";
+
+const SORT_LABELS: Record<SortOption, string> = {
+  composite: "Gravy train (your weights)",
+  gtm_momentum: "GTM momentum",
+  funding_velocity: "Funding velocity",
+  quota_reality: "Quota reality",
+  regional_balance: "Regional balance",
+  pmf_strength: "PMF strength",
+  timing: "Timing",
+  territory: "Territory",
+  talent: "Talent",
+};
 
 type CategoryFilter = "all" | "forbes_ai50" | "hyperscaler" | "established";
 
-export type CompanyListItem = {
-  company: Company;
-  research: CompanyResearch;
-};
+function dimValue(score: DimensionScore): number | null {
+  return score.value;
+}
 
 export default function CompaniesClient({
   items,
   industries,
-  regions,
 }: {
-  items: CompanyListItem[];
+  items: ScoredCompany[];
   industries: string[];
-  regions: string[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { weights, lens } = useWeights();
 
   const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [industryFilter, setIndustryFilter] = useState(
     () => searchParams.get("industry") ?? "all"
   );
-  const [regionFilter, setRegionFilter] = useState(
-    () => searchParams.get("region") ?? "all"
-  );
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>(
     () => (searchParams.get("category") as CategoryFilter) ?? "all"
   );
+  const [anzOnly, setAnzOnly] = useState(() => searchParams.get("anz") === "1");
   const [gravyTrainOnly, setGravyTrainOnly] = useState(
     () => searchParams.get("gravy") === "1"
   );
   const [sortBy, setSortBy] = useState<SortOption>(
-    () => (searchParams.get("sort") as SortOption) ?? "gravyTrain"
+    () => (searchParams.get("sort") as SortOption) ?? "composite"
   );
 
   const syncUrl = useCallback(
     (updates: {
       q?: string;
       industry?: string;
-      region?: string;
+      anz?: boolean;
       gravy?: boolean;
       sort?: string;
       category?: string;
@@ -87,17 +99,16 @@ export default function CompaniesClient({
           params.set("industry", updates.industry);
         else params.delete("industry");
       }
-      if ("region" in updates) {
-        if (updates.region && updates.region !== "all")
-          params.set("region", updates.region);
-        else params.delete("region");
+      if ("anz" in updates) {
+        if (updates.anz) params.set("anz", "1");
+        else params.delete("anz");
       }
       if ("gravy" in updates) {
         if (updates.gravy) params.set("gravy", "1");
         else params.delete("gravy");
       }
       if ("sort" in updates) {
-        if (updates.sort && updates.sort !== "gravyTrain")
+        if (updates.sort && updates.sort !== "composite")
           params.set("sort", updates.sort);
         else params.delete("sort");
       }
@@ -121,14 +132,13 @@ export default function CompaniesClient({
   }, [search, syncUrl]);
 
   const filtered = useMemo(() => {
-    let result = [...items];
+    let result = items;
 
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
         ({ company: c }) =>
           c.name.toLowerCase().includes(q) ||
-          c.description.toLowerCase().includes(q) ||
           c.sellsItself.toLowerCase().includes(q) ||
           c.industry.toLowerCase().includes(q)
       );
@@ -144,55 +154,93 @@ export default function CompaniesClient({
       );
     }
 
-    if (regionFilter !== "all") {
-      result = result.filter(({ company: c }) =>
-        c.expandingRegions?.includes(regionFilter)
+    if (anzOnly) {
+      result = result.filter(
+        ({ scorecard }) => scorecard.anzDetections.length > 0
       );
     }
 
+    // Composite depends on the user's weights + role lens, so ranking
+    // recomputes client-side whenever either changes (P1.8, P1.10).
+    const withComposite = result.map((item) => ({
+      item,
+      composite: computeComposite(item.scorecard, weights, lens).value,
+    }));
+
+    let ranked = withComposite;
     if (gravyTrainOnly) {
-      result = result.filter(({ company: c }) => c.gravyTrainScore >= 90);
+      ranked = ranked.filter(
+        ({ composite }) => composite != null && composite >= 75
+      );
     }
 
-    result.sort((a, b) => {
+    const sortValue = ({
+      item,
+      composite,
+    }: (typeof ranked)[number]): number | null => {
       switch (sortBy) {
         case "timing":
-          return b.company.threeTs.timing.score - a.company.threeTs.timing.score;
         case "territory":
-          return (
-            b.company.threeTs.territory.score - a.company.threeTs.territory.score
-          );
         case "talent":
-          return b.company.threeTs.talent.score - a.company.threeTs.talent.score;
-        case "growth":
-          return (
-            parseFloat(b.company.financials.growthRate) -
-            parseFloat(a.company.financials.growthRate)
-          );
+          return dimValue(item.scorecard.dimensions[sortBy]);
         case "gtm_momentum":
-          return b.company.benchmarks.gtmMomentum - a.company.benchmarks.gtmMomentum;
         case "funding_velocity":
-          return b.company.benchmarks.fundingVelocity - a.company.benchmarks.fundingVelocity;
         case "quota_reality":
-          return b.company.benchmarks.quotaReality - a.company.benchmarks.quotaReality;
+        case "regional_balance":
+        case "pmf_strength":
+          return dimValue(item.scorecard.benchmarks[sortBy]);
         default:
-          return b.company.gravyTrainScore - a.company.gravyTrainScore;
+          return composite;
       }
-    });
+    };
 
-    return result;
-  }, [items, search, industryFilter, categoryFilter, regionFilter, gravyTrainOnly, sortBy]);
+    // Companies with insufficient data sort to the bottom — a missing
+    // metric is never treated as a zero score.
+    return [...ranked]
+      .sort((a, b) => {
+        const av = sortValue(a);
+        const bv = sortValue(b);
+        if (av == null && bv == null) return 0;
+        if (av == null) return 1;
+        if (bv == null) return -1;
+        return bv - av;
+      })
+      .map(({ item }) => item);
+  }, [
+    items,
+    search,
+    industryFilter,
+    categoryFilter,
+    anzOnly,
+    gravyTrainOnly,
+    sortBy,
+    weights,
+    lens,
+  ]);
 
   const hasFilters =
     search ||
     industryFilter !== "all" ||
     categoryFilter !== "all" ||
-    regionFilter !== "all" ||
+    anzOnly ||
     gravyTrainOnly;
 
   const resultsMessage = hasFilters
     ? `${filtered.length} companies match your filters`
     : `${filtered.length} companies`;
+
+  const newestUpdate = useMemo(() => {
+    let latest: string | null = null;
+    for (const { scorecard } of items) {
+      if (
+        scorecard.lastUpdated &&
+        (!latest || scorecard.lastUpdated > latest)
+      ) {
+        latest = scorecard.lastUpdated;
+      }
+    }
+    return latest;
+  }, [items]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -200,9 +248,14 @@ export default function CompaniesClient({
         align="left"
         eyebrow="Forbes AI 50 · Hyperscalers · SaaS"
         title="Company benchmarks"
-        description="Compare GTM signals across companies — gravy train scores, momentum, funding velocity, and quota reality."
-        className="mb-8"
+        description="Every score is computed from source-backed inputs — public job boards, sourced funding events, RepVue, and verified community submissions. Click any number for its provenance."
+        className="mb-4"
       />
+      <div className="mb-6">
+        <LastUpdated iso={newestUpdate} prefix="Freshest signal retrieved" />
+      </div>
+
+      <WeightsPanel className="mb-6" />
 
       <div className="mb-8 flex flex-col gap-4 border border-rule bg-card p-4 sm:flex-row sm:items-center">
         <div className="relative min-w-0 flex-1">
@@ -274,30 +327,6 @@ export default function CompaniesClient({
             </SelectContent>
           </Select>
           <Select
-            value={regionFilter}
-            onValueChange={(v) => {
-              const next = v ?? "all";
-              setRegionFilter(next);
-              syncUrl({ region: next });
-            }}
-          >
-            <SelectTrigger
-              id="region-filter"
-              className="w-[160px] border-rule bg-background"
-              aria-label="Filter by region"
-            >
-              <SelectValue placeholder="Region" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All regions</SelectItem>
-              {regions.map((region) => (
-                <SelectItem key={region} value={region}>
-                  {region}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
             value={sortBy}
             onValueChange={(v) => {
               if (!v) return;
@@ -307,26 +336,36 @@ export default function CompaniesClient({
           >
             <SelectTrigger
               id="sort-by"
-              className="w-[180px] border-rule bg-background"
+              className="w-[210px] border-rule bg-background"
               aria-label="Sort companies"
             >
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="gravyTrain">Gravy train score</SelectItem>
-              <SelectItem value="gtm_momentum">GTM momentum</SelectItem>
-              <SelectItem value="funding_velocity">Funding velocity</SelectItem>
-              <SelectItem value="quota_reality">Quota reality</SelectItem>
-              <SelectItem value="timing">
-                {THREE_T_META.timing.label} (highest weight)
-              </SelectItem>
-              <SelectItem value="territory">
-                {THREE_T_META.territory.label}
-              </SelectItem>
-              <SelectItem value="talent">{THREE_T_META.talent.label}</SelectItem>
-              <SelectItem value="growth">Growth rate</SelectItem>
+              {(Object.keys(SORT_LABELS) as SortOption[]).map((key) => (
+                <SelectItem key={key} value={key}>
+                  {SORT_LABELS[key]}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
+          <button
+            type="button"
+            onClick={() => {
+              const next = !anzOnly;
+              setAnzOnly(next);
+              syncUrl({ anz: next });
+            }}
+            aria-pressed={anzOnly}
+            className={`focus-ring inline-flex h-9 items-center gap-2 border px-3 text-sm font-medium transition-colors ${
+              anzOnly
+                ? "border-gravy bg-gravy/15 text-brief"
+                : "border-rule bg-background text-muted-foreground hover:bg-accent"
+            }`}
+          >
+            <MapPin className="h-3.5 w-3.5" aria-hidden />
+            Expanding into ANZ
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -342,7 +381,7 @@ export default function CompaniesClient({
             }`}
           >
             <Train className="h-3.5 w-3.5" aria-hidden />
-            Gravy train only
+            Gravy train only (75+)
           </button>
         </div>
       </div>
@@ -359,9 +398,9 @@ export default function CompaniesClient({
                 setSearch("");
                 setIndustryFilter("all");
                 setCategoryFilter("all");
-                setRegionFilter("all");
+                setAnzOnly(false);
                 setGravyTrainOnly(false);
-                setSortBy("gravyTrain");
+                setSortBy("composite");
                 router.replace(pathname, { scroll: false });
               }}
               className="focus-ring text-xs text-muted-foreground underline hover:text-foreground"
@@ -370,17 +409,16 @@ export default function CompaniesClient({
             </button>
           )}
         </div>
-        <SignalSourceLegend />
+        <p className="text-xs text-muted-foreground">
+          Companies without source-backed data rank last — never with a
+          synthesized score.
+        </p>
       </div>
 
       {filtered.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map(({ company, research }) => (
-            <CompanyCard
-              key={company.slug}
-              company={company}
-              research={research}
-            />
+          {filtered.map((item) => (
+            <ScoredCompanyCard key={item.company.slug} item={item} />
           ))}
         </div>
       ) : (

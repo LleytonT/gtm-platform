@@ -48,18 +48,33 @@ export function Footer() {
           </div>
           <div>
             <h2 className="font-mono-data mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Data sources
+              Data & trust
             </h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Forbes AI 50 (2025)</li>
-              <li>LinkedIn GTM signals</li>
-              <li>Funding & press events</li>
-              <li>RepVue quota proxies</li>
+              <li>Public job boards (Greenhouse / Lever / Ashby APIs)</li>
+              <li>RepVue rep-sentiment percentiles</li>
+              <li>Curated funding &amp; press events (sourced)</li>
+              <li>Verified community submissions (n ≥ 3)</li>
+              <li>
+                <Link href="/methodology" className="underline hover:text-foreground">
+                  Methodology &amp; limitations
+                </Link>
+              </li>
+              <li>
+                <Link href="/submit" className="underline hover:text-foreground">
+                  Submit comp / quota data
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
         <div className="mt-8 hairline-b border-t pt-8 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} GTM Hire · Benchmark data is illustrative for diligence purposes
+          &copy; {new Date().getFullYear()} GTM Hire · Every rendered score
+          carries source records — metrics without sources show
+          &ldquo;insufficient data&rdquo;. Disputes &amp; corrections:{" "}
+          <a href="mailto:corrections@gtmhire.example" className="underline">
+            corrections@gtmhire.example
+          </a>
         </div>
       </div>
     </footer>
