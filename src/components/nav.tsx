@@ -5,12 +5,23 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { BarChart3, Building2, Menu, Train } from "lucide-react";
+import {
+  BarChart3,
+  Bell,
+  BookOpenCheck,
+  Building2,
+  Menu,
+  PenSquare,
+  Train,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Benchmarks", icon: BarChart3 },
   { href: "/companies", label: "Companies", icon: Building2 },
+  { href: "/methodology", label: "Methodology", icon: BookOpenCheck },
+  { href: "/submit", label: "Submit data", icon: PenSquare },
+  { href: "/alerts", label: "Alerts", icon: Bell },
 ];
 
 export function Nav() {
@@ -59,12 +70,6 @@ export function Nav() {
             );
           })}
         </nav>
-
-        <div className="hidden md:block">
-          <Button size="sm" render={<Link href="/companies" />}>
-            All companies
-          </Button>
-        </div>
 
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger

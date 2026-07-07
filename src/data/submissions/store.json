@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "submissions": [
+    {
+      "id": "sample-datadog-au-1",
+      "company": "datadog",
+      "region": "AU",
+      "role": "ae",
+      "ote_base_split": "AU$160k base / AU$320k OTE (50/50)",
+      "attainment_band": "50_75",
+      "ramp_months": 6,
+      "comp_model": "consumption",
+      "free_text": "Consumption expansion carries the number; net-new is slow in AU mid-market.",
+      "work_email_hash": "3f2c1e8a9b7d5f0e4c6a2b1d8e9f0a3c5b7d9e1f2a4c6e8b0d2f4a6c8e0b2d4f",
+      "invite_code_used": false,
+      "verified": true,
+      "submitted_at": "2026-06-20T04:12:00.000Z",
+      "sample": true
+    },
+    {
+      "id": "sample-datadog-au-2",
+      "company": "datadog",
+      "region": "AU",
+      "role": "ae",
+      "ote_base_split": "AU$150k base / AU$300k OTE (50/50)",
+      "attainment_band": "75_100",
+      "ramp_months": 7,
+      "comp_model": "consumption",
+      "free_text": "Ramp was realistic. Enterprise patch had existing consumption to grow.",
+      "work_email_hash": "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
+      "invite_code_used": false,
+      "verified": true,
+      "submitted_at": "2026-06-25T22:45:00.000Z",
+      "sample": true
+    },
+    {
+      "id": "sample-datadog-au-3",
+      "company": "datadog",
+      "region": "AU",
+      "role": "se_fde",
+      "ote_base_split": "AU$185k base / AU$230k OTE (80/20)",
+      "attainment_band": "75_100",
+      "ramp_months": 4,
+      "comp_model": "consumption",
+      "free_text": "SE org is well staffed in Sydney; strong enablement.",
+      "work_email_hash": null,
+      "invite_code_used": true,
+      "verified": true,
+      "submitted_at": "2026-07-01T09:30:00.000Z",
+      "sample": true
+    }
+  ]
+}

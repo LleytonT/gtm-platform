@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { companies, getResearchForCompany } from "@/lib/data";
+import { getScoredCompanies } from "@/lib/scored";
 import CompaniesClient from "./companies-client";
 
 function CompaniesLoading() {
@@ -15,23 +15,12 @@ function CompaniesLoading() {
 }
 
 export default function CompaniesPage() {
-  const items = companies.map((company) => ({
-    company,
-    research: getResearchForCompany(company),
-  }));
-
-  const industries = [...new Set(companies.map((c) => c.industry))];
-  const regions = [
-    ...new Set(companies.flatMap((c) => c.expandingRegions ?? [])),
-  ];
+  const items = getScoredCompanies();
+  const industries = [...new Set(items.map((i) => i.company.industry))];
 
   return (
     <Suspense fallback={<CompaniesLoading />}>
-      <CompaniesClient
-        items={items}
-        industries={industries}
-        regions={regions}
-      />
+      <CompaniesClient items={items} industries={industries} />
     </Suspense>
   );
 }

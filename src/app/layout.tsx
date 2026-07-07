@@ -4,6 +4,7 @@ import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { SkipLink } from "@/components/skip-link";
+import { WeightsProvider } from "@/components/weights-provider";
 
 const sourceSerif = Source_Serif_4({
   variable: "--font-display",
@@ -42,12 +43,14 @@ export default function RootLayout({
       className={`${sourceSerif.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col overflow-x-hidden touch-manipulation">
-        <SkipLink />
-        <Nav />
-        <main id="main-content" className="flex-1 scroll-mt-20">
-          {children}
-        </main>
-        <Footer />
+        <WeightsProvider>
+          <SkipLink />
+          <Nav />
+          <main id="main-content" className="flex-1 scroll-mt-20">
+            {children}
+          </main>
+          <Footer />
+        </WeightsProvider>
       </body>
     </html>
   );

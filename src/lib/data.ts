@@ -359,7 +359,7 @@ const coreCompanies: Company[] = (
       marketGrowth: "Conversation intelligence market growing 20% CAGR",
       competitivePosition: "Category leader",
       signals: [
-        "4,000+ customers including LinkedIn, Shopify, Hubspot",
+        "4,000+ customers per public press statements and case-study pages",
         "Expanding into forecasting and engagement",
         "High NPS and customer satisfaction",
         "Strong word-of-mouth in sales community",

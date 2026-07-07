@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "scrape:repvue": "tsx scripts/scrape-repvue.mts",
+    "scrape:jobs": "tsx scripts/scrape-job-boards.mts",
     "build:repvue-cache": "tsx scripts/build-repvue-cache.mts",
     "scrape:exa": "node --env-file=.env.local --import tsx scripts/scrape-exa.mts"
   },
